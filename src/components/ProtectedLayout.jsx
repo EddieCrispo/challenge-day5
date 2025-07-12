@@ -1,9 +1,8 @@
-import React from "react";
-import { useAuthStore } from "../stores/authStore";
 import { Navigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
 
 function ProtectedLayout({ children }) {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
 
   if (!user) {
     return <Navigate to="/login" />;

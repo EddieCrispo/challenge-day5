@@ -1,7 +1,7 @@
 import { ArrowRight, Eye, EyeOff, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
-import { useAuthStore } from "../stores/authStore";
+import { useAuth } from "../contexts/AuthContext";
 
 const RegisterPage = ({}) => {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ const RegisterPage = ({}) => {
     confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const { register, loading, error } = useAuthStore();
+  const { register, loading, error } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

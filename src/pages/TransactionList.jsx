@@ -1,6 +1,6 @@
 // components/TransactionList.jsx
-import { useContext } from 'react';
-import { TransactionContext } from '../contexts/TransactionContext';
+import { useContext } from "react";
+import { TransactionContext } from "../contexts/TransactionContext";
 
 const TransactionList = () => {
   const {
@@ -10,9 +10,7 @@ const TransactionList = () => {
     setFilter,
     searchTerm,
     setSearchTerm,
-
   } = useContext(TransactionContext);
-    // console.log(transactions, "ini cek transaction")
 
   return (
     <div className="p-4">
@@ -47,11 +45,17 @@ const TransactionList = () => {
             <li key={tx.id} className="border rounded p-3 shadow-sm">
               <div className="flex justify-between">
                 <span className="font-semibold">{tx.description}</span>
-                <span className={`font-semibold ${tx.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
-                  {tx.type === 'income' ? '+' : '-'}${tx.amount}
+                <span
+                  className={`font-semibold ${
+                    tx.type === "income" ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {tx.type === "income" ? "+" : "-"}${tx.amount}
                 </span>
               </div>
-              <p className="text-sm text-gray-600">{tx.date} · {tx.category}</p>
+              <p className="text-sm text-gray-600">
+                {tx.date} · {tx.category}
+              </p>
             </li>
           ))}
         </ul>
