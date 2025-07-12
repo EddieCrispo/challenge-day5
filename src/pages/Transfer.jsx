@@ -1,5 +1,9 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+//buat nampilin transaction list
+import TransactionList from '../components/TransactionList';
+
+import { useNavigate } from "react-router";
 
 const Transfer = () => {
   const { user } = useContext(AuthContext);
@@ -12,6 +16,8 @@ const Transfer = () => {
     type: "internal",
   });
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleNext = () => {
     if (step < 3) setStep(step + 1);
@@ -38,6 +44,11 @@ const Transfer = () => {
       description: "",
       type: "internal",
     });
+  };
+
+  
+  const redirectListTransaction = () => {
+    navigate('/transactions');
   };
 
   return (
@@ -291,12 +302,21 @@ const Transfer = () => {
               {parseFloat(transferData.amount).toLocaleString()} has been sent
               successfully.
             </p>
+
             <button
               onClick={resetTransfer}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mr-4"
             >
               Send Another Transfer
             </button>
+            
+            <button
+              onClick={redirectListTransaction}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              See Transaction List
+            </button>
+
           </div>
         )}
       </div>
