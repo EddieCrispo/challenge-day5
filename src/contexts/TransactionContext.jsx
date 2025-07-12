@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { AuthContext } from "./AuthContext";
 import { mockAPI } from "../utils/mockAPI";
+import { useAuth } from "./AuthContext";
 
 // Transaction Context
 export const TransactionContext = createContext();
@@ -11,7 +11,7 @@ export const TransactionProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
 
   const loadTransactions = async () => {
     if (!user) return;

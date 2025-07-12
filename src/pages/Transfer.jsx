@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useAuthStore } from "../stores/authStore";
+import { useNavigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
 
 const Transfer = () => {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [transferData, setTransferData] = useState({
     recipient: "",

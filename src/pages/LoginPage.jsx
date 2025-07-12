@@ -1,12 +1,12 @@
 import { ArrowRight, CreditCard, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
-import { useAuthStore } from "../stores/authStore";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = ({}) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const { login, loading, error } = useAuthStore();
+  const { login, loading, error } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
