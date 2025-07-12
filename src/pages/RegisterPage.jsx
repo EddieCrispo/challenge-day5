@@ -149,4 +149,4 @@ const RegisterPage = ({ onToggle }) => {
   );
 };
 
-export default RegisterForm;
+export default RegisterPage;
