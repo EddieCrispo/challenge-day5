@@ -1,22 +1,25 @@
-import React, { createContext, useState } from 'react';
-import { useMemoryStorage, clearSessionData } from '../hooks/useMemoryStorage';
-import { mockAPI } from '../utils/mockAPI';
+import React, { createContext, useState } from "react";
+import { useMemoryStorage, clearSessionData } from "../hooks/useMemoryStorage";
+import { mockAPI } from "../utils/mockAPI";
+import { useNavigate } from "react-router";
 
 // Auth Context
 export const AuthContext = createContext();
 
 // Auth Provider
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useMemoryStorage('banktech_user', null);
+  const [user, setUser] = useMemoryStorage("banktech_user", null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const login = async (email, password) => {
     setLoading(true);
-    setError('');
+    setError("");
     try {
       const userData = await mockAPI.authenticate(email, password);
       setUser(userData);
+      navigate("/transfer");
       return userData;
     } catch (err) {
       setError(err.message);
@@ -28,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     setLoading(true);
-    setError('');
+    setError("");
     try {
       const newUser = await mockAPI.register(userData);
       setUser(newUser);
@@ -51,15 +54,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      register, 
-      logout, 
-      updateUser,
-      loading, 
-      error 
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        updateUser,
+        loading,
+        error,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
