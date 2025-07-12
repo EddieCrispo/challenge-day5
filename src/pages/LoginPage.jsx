@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { CreditCard, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
+import { Link } from 'react-router'
 
-const LoginPage = ({ onToggle }) => {
+const LoginPage = ({}) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading, error } = useContext(AuthContext);
@@ -97,12 +98,11 @@ const LoginPage = ({ onToggle }) => {
       <div className="mt-8 text-center">
         <p className="text-gray-600">
           Don't have an account?{' '}
-          <button
-            onClick={onToggle}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
-            Sign up
-          </button>
+          <Link to="/register">
+            <button className="text-blue-600 hover:text-blue-700 font-medium">
+              Sign up
+            </button>
+          </Link>
         </p>
       </div>
     </div>

@@ -3,6 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 // import './App.css'
 
+// Components
+import PublicLayout from './components/PublicLayout'
+
+// Context
+import { AuthProvider } from './contexts/AuthContext'
+
 // Router
 import { Route, Routes, Link } from 'react-router'
 
@@ -11,14 +17,22 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <Routes>
-        <Route path='/' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={
+            <PublicLayout>
+              <LoginPage />
+            </PublicLayout>
+          } />
+          <Route path='/register' element={
+            <PublicLayout>
+              <RegisterPage />
+            </PublicLayout>
+          } />
+        </Routes>
+      </AuthProvider>
     </>
   )
 }

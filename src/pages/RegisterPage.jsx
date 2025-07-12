@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { User, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
+import { Link } from 'react-router'
 
-const RegisterPage = ({ onToggle }) => {
+const RegisterPage = ({}) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -137,12 +138,11 @@ const RegisterPage = ({ onToggle }) => {
       <div className="mt-8 text-center">
         <p className="text-gray-600">
           Already have an account?{' '}
-          <button
-            onClick={onToggle}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
-            Sign in
-          </button>
+          <Link to="/">
+            <button className="text-blue-600 hover:text-blue-700 font-medium">
+              Sign in
+            </button>
+          </Link>
         </p>
       </div>
     </div>
