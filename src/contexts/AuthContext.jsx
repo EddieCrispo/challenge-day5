@@ -1,6 +1,6 @@
+import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useContext, useState } from "react";
-import axios from "../utils/axiosInstance";
 
 const TOKEN_KEY = "auth_token";
 
@@ -28,9 +28,12 @@ export const AuthProvider = ({ children }) => {
     setError("");
 
     try {
-      const res = await axios.get("/users", {
-        params: { email, password },
-      });
+      const res = await axios.get(
+        "https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/users",
+        {
+          params: { email, password },
+        }
+      );
 
       const user = res.data[0];
 
