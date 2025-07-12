@@ -8,6 +8,7 @@ import PublicLayout from "./components/PublicLayout";
 
 // Context
 import { AuthProvider } from "./contexts/AuthContext";
+import { TransactionProvider } from "./contexts/TransactionContext";
 
 // Router
 import { Route, Routes, Link } from "react-router";
@@ -16,11 +17,14 @@ import { Route, Routes, Link } from "react-router";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Transfer from "./pages/Transfer";
+import TransactionList from "./components/TransactionList";
 
 function App() {
   return (
     <>
       <AuthProvider>
+      <TransactionProvider>
+
         <Routes>
           <Route
             path="/"
@@ -44,7 +48,15 @@ function App() {
               <Transfer />
             }
           />
+          <Route
+            path="/transactions"
+            element={
+              <TransactionList />
+            }
+          />
         </Routes>
+
+      </TransactionProvider>
       </AuthProvider>
     </>
   );
