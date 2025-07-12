@@ -1,12 +1,8 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-//buat nampilin transaction list
-import TransactionList from '../components/TransactionList';
-
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { useAuthStore } from "../stores/authStore";
 
 const Transfer = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuthStore();
   const [step, setStep] = useState(1);
   const [transferData, setTransferData] = useState({
     recipient: "",
@@ -46,9 +42,8 @@ const Transfer = () => {
     });
   };
 
-  
   const redirectListTransaction = () => {
-    navigate('/transactions');
+    navigate("/transactions");
   };
 
   return (
@@ -309,14 +304,13 @@ const Transfer = () => {
             >
               Send Another Transfer
             </button>
-            
+
             <button
               onClick={redirectListTransaction}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
               See Transaction List
             </button>
-
           </div>
         )}
       </div>

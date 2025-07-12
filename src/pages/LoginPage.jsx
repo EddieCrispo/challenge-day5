@@ -1,12 +1,12 @@
-import React, { useState, useContext } from 'react';
-import { CreditCard, Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { AuthContext } from '../contexts/AuthContext';
-import { Link } from 'react-router'
+import { ArrowRight, CreditCard, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router";
+import { useAuthStore } from "../stores/authStore";
 
 const LoginPage = ({}) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const { login, loading, error } = useContext(AuthContext);
+  const { login, loading, error } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,12 +32,14 @@ const LoginPage = ({}) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Email Address
+            Email
           </label>
           <input
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             placeholder="Enter your email"
             required
@@ -52,7 +54,9 @@ const LoginPage = ({}) => {
             <input
               type={showPassword ? "text" : "password"}
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
               placeholder="Enter your password"
               required
@@ -62,7 +66,11 @@ const LoginPage = ({}) => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
@@ -89,17 +97,11 @@ const LoginPage = ({}) => {
         </button>
       </form>
 
-      <div className="mt-6 text-center">
-        <p className="text-gray-600">
-          Demo credentials: demo@banktech.com / demo123
-        </p>
-      </div>
-
       <div className="mt-8 text-center">
         <p className="text-gray-600">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <Link to="/register">
-            <button className="text-blue-600 hover:text-blue-700 font-medium">
+            <button className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
               Sign up
             </button>
           </Link>
