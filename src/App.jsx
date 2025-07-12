@@ -1,63 +1,46 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-// import './App.css'
-
 // Components
 import PublicLayout from "./components/PublicLayout";
 
-// Context
-import { AuthProvider } from "./contexts/AuthContext";
-import { TransactionProvider } from "./contexts/TransactionContext";
-
 // Router
-import { Route, Routes, Link } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 // Pages
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Transfer from "./pages/Transfer";
-import TransactionList from "./components/TransactionList";
+import ProtectedLayout from "./components/ProtectedLayout";
 
 function App() {
   return (
     <>
-      <AuthProvider>
-      <TransactionProvider>
+      <Routes>
+        <Route path="/" element={<Navigate to="/transfer" replace />} />
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <PublicLayout>
-                <LoginPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicLayout>
-                <RegisterPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/transfer"
-            element={
+        <Route
+          path="/login"
+          element={
+            <PublicLayout>
+              <LoginPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicLayout>
+              <RegisterPage />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/transfer"
+          element={
+            <ProtectedLayout>
               <Transfer />
-            }
-          />
-          <Route
-            path="/transactions"
-            element={
-              <TransactionList />
-            }
-          />
-        </Routes>
-
-      </TransactionProvider>
-      </AuthProvider>
+            </ProtectedLayout>
+          }
+        />
+      </Routes>
     </>
   );
 }
