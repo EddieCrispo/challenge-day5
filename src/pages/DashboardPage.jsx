@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import AccountSection from "../components/AccountSection";
+import SummarySection from "../components/SummarySection";
 import { useAuth } from "../contexts/AuthContext";
 import { TransactionContext } from "../contexts/TransactionContext";
 import {
@@ -8,8 +9,6 @@ import {
   DollarSign,
   TrendingUp,
 } from "lucide-react";
-import { useAccountStore } from "../stores/accountStore";
-import Profile from "../components/Profile";
 
 export default function DashboardPage() {
   const { user } = useAuth(); // user.id must be available
@@ -35,58 +34,15 @@ export default function DashboardPage() {
   const recentTransactions = transactions.slice(0, 5);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 ">
       <h1 className="text-2xl font-bold mb-4">Accounts</h1>
 
       <AccountSection />
 
-      {/* Balance Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Total Balance</p>
-              <p className="text-2xl font-bold text-gray-900">
-                ${account?.balance?.toLocaleString() || "0"}
-              </p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <DollarSign className="w-6 h-6 text-blue-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Income</p>
-              <p className="text-2xl font-bold text-green-600">
-                ${income.toLocaleString()}
-              </p>
-            </div>
-            <div className="bg-green-100 p-3 rounded-lg">
-              <TrendingUp className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Expenses</p>
-              <p className="text-2xl font-bold text-red-600">
-                ${expenses.toLocaleString()}
-              </p>
-            </div>
-            <div className="bg-red-100 p-3 rounded-lg">
-              <ArrowDownRight className="w-6 h-6 text-red-600" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <SummarySection />
 
       {/* Recent Transactions */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      {/* <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">
             Recent Transactions
@@ -161,7 +117,7 @@ export default function DashboardPage() {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

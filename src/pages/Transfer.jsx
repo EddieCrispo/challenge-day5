@@ -5,34 +5,51 @@ import { useNavigate } from "react-router";
 import * as Yup from "yup";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
+import Steps from "../components/Steps";
+import { useTransactionStore } from "../stores/transactionStore";
+import { useAccountStore } from "../stores/accountStore";
+import { useCategoryStore } from "../stores/categoryStore";
+import { toast } from "react-toastify";
+import { useTransferWizardStore } from "../stores/transferStore";
 
-const FORM_STORAGE_KEY = "transfer_form_progress";
-
-const defaultValues = {
+const DEFAULT_VALUES = {
   recipient: "",
-  amount: "",
+  amount: undefined,
   category: "",
   description: "",
   type: "internal",
-};
-
-const getInitialValues = () => {
-  const saved = JSON.parse(localStorage.getItem(FORM_STORAGE_KEY) || "null");
-  return saved || defaultValues;
+  sourceAccount: "",
 };
 
 const Transfer = () => {
   const { user } = useAuth();
-  const [step, setStep] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isValidatingAccount, setIsValidatingAccount] = useState(false);
+
   const [debouncedRecipient, setDebouncedRecipient] = useState("");
   const debounceTimeoutRef = useRef(null);
   const navigate = useNavigate();
 
+  const { createTransaction, loading } = useTransactionStore();
+  const { accounts, fetchAccounts } = useAccountStore();
+  const { categories, fetchCategories } = useCategoryStore();
+
+  const {
+    step,
+    setStep,
+    isSuccess,
+    setIsSuccess,
+    receiverAccount,
+    setReceiverAccount,
+    sourceAccount,
+    resetWizard,
+    setSourceAccount,
+    isValidatingAccount,
+    setIsValidatingAccount,
+  } = useTransferWizardStore();
+
+  console.log(step, "===");
+
   const formik = useFormik({
-    initialValues: getInitialValues(),
+    initialValues: DEFAULT_VALUES,
     validationSchema: Yup.object({
       ...(step === 0 && {
         type: Yup.string().required("Transfer type is required."),
@@ -56,34 +73,27 @@ const Transfer = () => {
               if (!value || value !== debouncedRecipient) return true;
 
               const trimmed = value.trim().toLowerCase();
-              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
               const accountRegex = /^\d{8,16}$/;
 
-              if (!emailRegex.test(trimmed) && !accountRegex.test(trimmed))
-                return false;
+              if (!accountRegex.test(trimmed)) return false;
 
               try {
                 const response = await axios.get(
-                  "https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/accounts"
+                  "https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/accounts",
+                  { params: { accountNumber: value } }
                 );
-                const accounts = response.data;
 
-                const accountExists = accounts.some((account) => {
-                  return (
-                    account?.email?.toLowerCase() === trimmed ||
-                    account?.accountNumber === trimmed ||
-                    account?.phoneNumber === trimmed ||
-                    account?.id === trimmed ||
-                    account?.name?.toLowerCase() === trimmed ||
-                    account?.phone === trimmed
-                  );
-                });
+                const accounts = response.data;
+                const accountExists = accounts.find(
+                  (account) => account.accountNumber === value
+                );
+
+                setReceiverAccount(accountExists || null);
 
                 return accountExists;
               } catch (error) {
-                console.error("Error verifying account:", error);
                 return this.createError({
-                  message: "Unable to verify account. Please try again later.",
+                  message: "Account not found.",
                 });
               }
             }
@@ -99,28 +109,45 @@ const Transfer = () => {
             "decimal-places",
             "Amount can have at most 2 decimal places",
             function (value) {
-              if (!value) return true;
+              if (value === undefined || value === null) return true;
               return Number(value.toFixed(2)) === value;
             }
+          )
+          .test(
+            "sufficient-funds",
+            "Insufficient balance in source account",
+            function (value) {
+              const { sourceAccount } = this.parent; // akses nilai lain di form
+              if (!value || !sourceAccount) return true;
+
+              const selectedAccount = accounts.find(
+                (acc) => acc.accountNumber === sourceAccount
+              );
+
+              if (!selectedAccount) return true; // validasi account di tempat lain
+
+              return selectedAccount.balance >= value;
+            }
           ),
+
+        sourceAccount: Yup.string().required("Source account is required."),
       }),
     }),
     validateOnChange: true,
     validateOnBlur: true,
     enableReinitialize: true,
-    onSubmit: async (values) => {
-      setIsProcessing(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsProcessing(false);
-        setIsSuccess(true);
-        localStorage.removeItem(FORM_STORAGE_KEY);
-      } catch (error) {
-        setIsProcessing(false);
-        console.error("Transfer failed:", error);
-      }
-    },
   });
+
+  const handleSubmit = async () => {
+    try {
+      await createTransaction(formik.values, receiverAccount, sourceAccount);
+      fetchAccounts();
+      setIsSuccess(true);
+    } catch (error) {
+      console.log(error);
+      toast.error("Transaction failed!");
+    }
+  };
 
   // Debounce effect
   useEffect(() => {
@@ -144,7 +171,7 @@ const Transfer = () => {
     setIsValidatingAccount(false);
 
     if (stepErrors.length === 0) {
-      setStep((prev) => prev + 1);
+      setStep(step + 1);
     } else {
       formik.setTouched(
         stepErrors.reduce((acc, key) => {
@@ -155,31 +182,21 @@ const Transfer = () => {
     }
   };
 
-  const handlePrevStep = () => setStep((prev) => prev - 1);
+  const handlePrevStep = () => setStep(step - 1);
 
   const resetTransfer = () => {
-    setStep(0);
-    setIsSuccess(false);
     formik.resetForm();
-    localStorage.removeItem(FORM_STORAGE_KEY);
+    resetWizard();
   };
 
   const redirectListTransaction = () => navigate("/transaction");
 
   useEffect(() => {
-    if (!isSuccess) {
-      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formik.values));
+    if (user?.id) {
+      fetchAccounts(user.id);
+      fetchCategories();
     }
-  }, [formik.values, isSuccess]);
-
-  const categoryOptions = [
-    { value: "", label: "Select a category" },
-    { value: "food", label: "FOOD & BEVERAGE" },
-    { value: "shopping", label: "SHOPPING" },
-    { value: "bills", label: "BILLS" },
-    { value: "entertainment", label: "ENTERTAINMENT" },
-    { value: "others", label: "OTHERS" },
-  ];
+  }, [user]);
 
   if (isSuccess) {
     return (
@@ -192,14 +209,15 @@ const Transfer = () => {
             <h2 className="text-xl font-semibold text-gray-900">
               Transfer Successful!
             </h2>
-            {/* <p className="text-gray-600">
-              Your transfer of $
-              {parseFloat(formik.values.amount).toLocaleString()} has been sent
-              successfully.
-            </p> */}
+            <p className="text-gray-600">
+              Successfully transfer $
+              {parseFloat(formik.values.amount).toLocaleString()} to{" "}
+              {formik.values.recipient}.
+            </p>
 
             <div className="flex justify-center space-x-4">
               <button
+                type="button"
                 onClick={resetTransfer}
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
@@ -207,6 +225,7 @@ const Transfer = () => {
               </button>
 
               <button
+                type="button"
                 onClick={redirectListTransaction}
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
@@ -220,38 +239,18 @@ const Transfer = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Transfer Money</h1>
-        <p className="text-gray-600 mt-2">Send money quickly and securely</p>
+    <div className="w-full space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold mb-0">Transfer</h1>
+
+        <p className="text-gray-600">Send money quickly and securely</p>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
         {/* Progress Bar */}
-        <div className="flex items-center justify-between mb-8">
-          {[0, 1, 2].map((stepNum) => (
-            <div key={stepNum} className="flex items-center">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step >= stepNum
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                {stepNum + 1}
-              </div>
-              {stepNum < 2 && (
-                <div
-                  className={`w-16 h-1 mx-2 ${
-                    step > stepNum ? "bg-blue-600" : "bg-gray-200"
-                  }`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
+        <Steps length={3} current={step} circleSize={56} fontSize={18} />
 
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <form className="space-y-6">
           {/* Step 0: Recipient Details */}
           {step === 0 && (
             <div className="space-y-6">
@@ -290,7 +289,7 @@ const Transfer = () => {
                     value={formik.values.recipient}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    placeholder="Enter account number or email"
+                    placeholder="Enter account number"
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                       formik.touched.recipient && formik.errors.recipient
                         ? "border-red-300"
@@ -303,10 +302,10 @@ const Transfer = () => {
                     </p>
                   )}
                   {isValidatingAccount && (
-                    <p className="text-blue-500 text-sm mt-1 flex items-center">
+                    <div className="text-blue-500 text-sm mt-1 flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
                       Checking account...
-                    </p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -361,9 +360,10 @@ const Transfer = () => {
                     onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    {categoryOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
+                    <option value="">Select category</option>
+                    {categories.map((option) => (
+                      <option key={option.name} value={option.id}>
+                        {option.name}
                       </option>
                     ))}
                   </select>
@@ -383,6 +383,42 @@ const Transfer = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Source Account
+                </label>
+                <select
+                  name="sourceAccount"
+                  value={formik.values.sourceAccount}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    if (!!e.target.value) {
+                      const currentAccount = accounts.find(
+                        (item) => item.accountNumber === e.target.value
+                      );
+                      setSourceAccount(currentAccount || null);
+                    } else {
+                      setSourceAccount(null);
+                    }
+                  }}
+                  onBlur={formik.handleBlur}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select source account</option>
+                  {accounts.map((acc) => (
+                    <option key={acc.id} value={acc.accountNumber}>
+                      {acc.accountType} ({acc.accountNumber}) | Balance: $
+                      {acc.balance}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.sourceAccount &&
+                  formik.errors.sourceAccount && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formik.errors.sourceAccount}
+                    </p>
+                  )}
               </div>
             </div>
           )}
@@ -420,9 +456,9 @@ const Transfer = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Category:</span>
                     <span className="font-medium capitalize">
-                      {categoryOptions.find(
-                        (opt) => opt.value === formik.values.category
-                      )?.label || formik.values.category}
+                      {categories.find(
+                        (opt) => opt.id === formik.values.category
+                      )?.name || formik.values.category}
                     </span>
                   </div>
                 )}
@@ -434,12 +470,24 @@ const Transfer = () => {
                     </span>
                   </div>
                 )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600">From:</span>
+                  <span className="font-medium">
+                    {
+                      accounts.find(
+                        (acc) =>
+                          acc.accountNumber === formik.values.sourceAccount
+                      )?.accountType
+                    }{" "}
+                    ({formik.values.sourceAccount})
+                  </span>
+                </div>
               </div>
             </div>
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center pt-4 gap-2">
+          <div className="flex justify-between items-center pt-4 gap-4">
             {step > 0 && (
               <button
                 type="button"
@@ -470,12 +518,12 @@ const Transfer = () => {
               </button>
             ) : (
               <button
-                type="button" // NOT submit to prevent auto-submit
-                onClick={() => formik.handleSubmit()} // Manually trigger
-                disabled={isProcessing}
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
                 className="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
               >
-                {isProcessing ? (
+                {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                     Processing...
