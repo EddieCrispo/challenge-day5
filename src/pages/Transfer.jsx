@@ -46,8 +46,6 @@ const Transfer = () => {
     setIsValidatingAccount,
   } = useTransferWizardStore();
 
-  console.log(step, "===");
-
   const formik = useFormik({
     initialValues: DEFAULT_VALUES,
     validationSchema: Yup.object({
@@ -130,7 +128,21 @@ const Transfer = () => {
             }
           ),
 
-        sourceAccount: Yup.string().required("Source account is required."),
+        sourceAccount: Yup.string()
+          .required("Source account is required.")
+          .test(
+            "not-same-as-recipient",
+            "Source account cannot be the same as recipient.",
+            function (value) {
+              const { recipient } = this.parent;
+              if (!value || !recipient) return true;
+
+              const trimmedSource = value.trim();
+              const trimmedRecipient = recipient.trim();
+
+              return trimmedSource !== trimmedRecipient;
+            }
+          ),
       }),
     }),
     validateOnChange: true,
