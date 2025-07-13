@@ -1,3 +1,7 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
 
 /* Use Tailwind's built-in dark mode by configuring it in tailwind.config.js and using the 'dark:' prefix in your classes */

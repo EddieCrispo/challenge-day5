@@ -13,6 +13,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import TransactionList from "./pages/TransactionList";
 import { Bounce, ToastContainer } from "react-toastify";
+import DashboardPage from "./pages/DashboardPage";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 </PublicLayout>
               }
             />
+
             <Route
               path="/register"
               element={
@@ -52,6 +54,7 @@ function App() {
                 </PublicLayout>
               }
             />
+
             <Route
               path="/transfer"
               element={
@@ -66,6 +69,15 @@ function App() {
               element={
                 <ProtectedLayout>
                   <TransactionList />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedLayout>
+                  <DashboardPage />
                 </ProtectedLayout>
               }
             />
