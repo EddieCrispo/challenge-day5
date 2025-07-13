@@ -1,23 +1,41 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AccountSection from "../components/AccountSection";
 import { useAuth } from "../contexts/AuthContext";
 import { TransactionContext } from "../contexts/TransactionContext";
-import { ArrowDownRight, ArrowUpRight, DollarSign, TrendingUp } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  DollarSign,
+  TrendingUp,
+} from "lucide-react";
+import { useAccountStore } from "../stores/accountStore";
+import Profile from "../components/Profile";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user } = useAuth(); // user.id must be available
   const { transactions, loading } = useContext(TransactionContext);
+  const { accounts, fetchAccounts } = useAccountStore();
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchAccounts(user.id);
+    }
+  }, [user?.id, fetchAccounts]);
+
+  const account = accounts.length > 0 ? accounts[0] : null;
 
   const income = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
+
   const expenses = transactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
+
   const recentTransactions = transactions.slice(0, 5);
 
   return (
-    <div className="space-y-2 ">
+    <div className="space-y-6">
       <h1 className="text-2xl font-bold mb-4">Accounts</h1>
 
       <AccountSection />
@@ -28,7 +46,9 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Balance</p>
-              <p className="text-2xl font-bold text-gray-900">$1263</p>
+              <p className="text-2xl font-bold text-gray-900">
+                ${account?.balance?.toLocaleString() || "0"}
+              </p>
             </div>
             <div className="bg-blue-100 p-3 rounded-lg">
               <DollarSign className="w-6 h-6 text-blue-600" />
@@ -40,7 +60,9 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Income</p>
-              <p className="text-2xl font-bold text-green-600">$24124</p>
+              <p className="text-2xl font-bold text-green-600">
+                ${income.toLocaleString()}
+              </p>
             </div>
             <div className="bg-green-100 p-3 rounded-lg">
               <TrendingUp className="w-6 h-6 text-green-600" />
@@ -52,7 +74,9 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Expenses</p>
-              <p className="text-2xl font-bold text-red-600">$124124</p>
+              <p className="text-2xl font-bold text-red-600">
+                ${expenses.toLocaleString()}
+              </p>
             </div>
             <div className="bg-red-100 p-3 rounded-lg">
               <ArrowDownRight className="w-6 h-6 text-red-600" />
