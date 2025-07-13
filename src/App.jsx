@@ -14,6 +14,7 @@ import { TransactionProvider } from "./contexts/TransactionContext";
 import TransactionList from "./pages/TransactionList";
 import { Bounce, ToastContainer } from "react-toastify";
 import DashboardPage from "./pages/DashboardPage";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -52,6 +53,15 @@ function App() {
                 <PublicLayout>
                   <RegisterPage />
                 </PublicLayout>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedLayout>
+                  <Profile />
+                </ProtectedLayout>
               }
             />
 
