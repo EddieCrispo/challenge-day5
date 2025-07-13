@@ -1,11 +1,143 @@
+import { useContext } from "react";
 import AccountSection from "../components/AccountSection";
+import { useAuth } from "../contexts/AuthContext";
+import { TransactionContext } from "../contexts/TransactionContext";
+import { ArrowDownRight, ArrowUpRight, DollarSign, TrendingUp } from "lucide-react";
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const { transactions, loading } = useContext(TransactionContext);
+
+  const income = transactions
+    .filter((t) => t.type === "income")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const expenses = transactions
+    .filter((t) => t.type === "expense")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const recentTransactions = transactions.slice(0, 5);
+
   return (
     <div className="space-y-2 ">
       <h1 className="text-2xl font-bold mb-4">Accounts</h1>
 
       <AccountSection />
+
+      {/* Balance Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Total Balance</p>
+              <p className="text-2xl font-bold text-gray-900">$1263</p>
+            </div>
+            <div className="bg-blue-100 p-3 rounded-lg">
+              <DollarSign className="w-6 h-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Income</p>
+              <p className="text-2xl font-bold text-green-600">$24124</p>
+            </div>
+            <div className="bg-green-100 p-3 rounded-lg">
+              <TrendingUp className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Expenses</p>
+              <p className="text-2xl font-bold text-red-600">$124124</p>
+            </div>
+            <div className="bg-red-100 p-3 rounded-lg">
+              <ArrowDownRight className="w-6 h-6 text-red-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Transactions */}
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Recent Transactions
+          </h2>
+          <button className="text-blue-600 hover:text-blue-700 font-medium">
+            View All
+          </button>
+        </div>
+
+        {loading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                  <div className="h-6 bg-gray-200 rounded w-20"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {recentTransactions.map((transaction) => (
+              <div
+                key={transaction.id}
+                className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors"
+              >
+                <div className="flex items-center space-x-4">
+                  <div
+                    className={`p-2 rounded-full ${
+                      transaction.type === "income"
+                        ? "bg-green-100"
+                        : transaction.type === "expense"
+                        ? "bg-red-100"
+                        : "bg-blue-100"
+                    }`}
+                  >
+                    {transaction.type === "income" ? (
+                      <ArrowUpRight className="w-5 h-5 text-green-600" />
+                    ) : transaction.type === "expense" ? (
+                      <ArrowDownRight className="w-5 h-5 text-red-600" />
+                    ) : (
+                      <Send className="w-5 h-5 text-blue-600" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {transaction.description}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {transaction.category} • {transaction.date}
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className={`font-semibold ${
+                    transaction.type === "income"
+                      ? "text-green-600"
+                      : transaction.type === "expense"
+                      ? "text-red-600"
+                      : "text-blue-600"
+                  }`}
+                >
+                  {transaction.type === "income" ? "+" : "-"}$
+                  {transaction.amount.toLocaleString()}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
