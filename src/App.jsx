@@ -36,7 +36,7 @@ function App() {
       <AuthProvider>
         <TransactionProvider>
           <Routes>
-            <Route path="/" element={<Navigate to="/transfer" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
             <Route
               path="/login"

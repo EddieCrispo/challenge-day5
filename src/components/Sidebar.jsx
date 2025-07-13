@@ -41,7 +41,7 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col border-r border-slate-200 w-[300px] bg-slate-100 text-gray-900">
-      <div className="px-8 py-4 border-t border-slate-200">
+      <div className="px-8 py-4 border-t border-slate-200 mb-2">
         <div className="flex items-center gap-3">
           <img
             src={user.imageProfile || "https://via.placeholder.com/150"}

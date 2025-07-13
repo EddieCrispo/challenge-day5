@@ -1,10 +1,19 @@
-export default function Steps({ current, length }) {
+import React from "react";
+
+export default function Steps({
+  current,
+  length,
+  circleSize = 32,
+  fontSize = 14,
+}) {
   return (
     <div className="flex items-center justify-between mb-8">
-      {Array.from({ length: length }).map((_, stepNum) => (
-        <div key={stepNum} className="flex items-center">
+      {Array.from({ length }).map((_, stepNum) => (
+        <React.Fragment key={stepNum}>
+          {/* Step Circle */}
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+            style={{ width: circleSize, height: circleSize, fontSize }}
+            className={`rounded-full flex items-center justify-center ${
               current >= stepNum
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-600"
@@ -12,14 +21,16 @@ export default function Steps({ current, length }) {
           >
             {stepNum + 1}
           </div>
-          {stepNum < 3 && (
+
+          {/* Tail (Line) - only if not the last step */}
+          {stepNum < length - 1 && (
             <div
-              className={`w-16 h-1 mx-2 ${
+              className={`flex-1 h-1 mx-2 ${
                 current > stepNum ? "bg-blue-600" : "bg-gray-200"
               }`}
             />
           )}
-        </div>
+        </React.Fragment>
       ))}
     </div>
   );

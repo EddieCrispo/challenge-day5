@@ -1,148 +1,186 @@
 {
-  "users": [
-    {
-      "id": 1,
-      "name": "Andi Putra",
-      "email": "andi@gmail.com",
-      "password": "hashed123",
-      "phone_number": "08123456789",
-      "address": "Jl. Merdeka No.1, Jakarta",
-      "role": "customer",
-      "createdAt": "2025-07-12T10:00:00Z"
-    },
-    {
-      "id": 2,
-      "name": "Dina Aulia",
-      "email": "dina@gmail.com",
-      "password": "hashed456",
-      "phone_number": "08234567890",
-      "address": "Jl. Sudirman No.2, Bandung",
-      "role": "admin",
-      "createdAt": "2025-07-12T10:15:00Z"
-    },
-    {
-      "id": 3,
-      "name": "Angga Yunandra",
-      "email": "anggayunandra@gmail.com",
-      "password": "hashed789",
-      "phone_number": "0824125213",
-      "address": "Cipete, Jakarta Selatan",
-      "role": "customer",
-      "createdAt": "2025-07-12T10:00:00Z"
-    }
-  ],
-  "accounts": [
-    {
-      "id": 101,
-      "userId": 1,
-      "accountNumber": "1234567890",
-      "accountType": "savings",
-      "balance": 5000000,
-      "currency": "IDR",
-      "createdAt": "2025-07-12T10:00:00Z"
-    },
-    {
-      "id": 102,
-      "userId": 2,
-      "accountNumber": "9876543210",
-      "accountType": "savings",
-      "balance": 7500000,
-      "currency": "IDR",
-      "createdAt": "2025-07-12T10:15:00Z"
-    },
-    {
-      "id": 103,
-      "userId": 3,
-      "accountNumber": "1122334455",
-      "accountType": "savings",
-      "balance": 3000000,
-      "currency": "IDR",
-      "createdAt": "2025-07-12T10:30:00Z"
-    }
-  ],
   "categories": [
     {
-      "id": 1,
-      "name": "Utilities",
-      "description": "Pembayaran tagihan seperti listrik, air, dll"
+      "id": "1",
+      "name": "Food & Beverages"
     },
     {
-      "id": 2,
-      "name": "Groceries",
-      "description": "Belanja kebutuhan sehari-hari"
+      "id": "2",
+      "name": "Bills"
     },
     {
-      "id": 3,
-      "name": "Entertainment",
-      "description": "Langganan streaming, bioskop, dll"
+      "id": "3",
+      "name": "Entertainment"
+    },
+    {
+      "id": "4",
+      "name": "Shopping"
+    },
+    {
+      "id": "5",
+      "name": "Other"
     }
   ],
   "transactions": [
     {
-      "id": 1001,
-      "accountId": 101,
-      "categoryId": 1,
-      "type": "payment",
-      "amount": 200000,
-      "description": "Bayar tagihan listrik PLN",
-      "status": "success",
-      "receiverAccount": "PLN-001122",
-      "createdAt": "2025-07-12T11:00:00Z"
+      "id": "1bd6",
+      "type": "internal",
+      "amount": "",
+      "description": "",
+      "categoryId": "",
+      "sourceAccount": "",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T09:34:51.382Z"
     },
     {
-      "id": 1002,
-      "accountId": 101,
-      "categoryId": 2,
-      "type": "withdrawal",
-      "amount": 300000,
-      "description": "Belanja bulanan di supermarket",
-      "status": "success",
-      "receiverAccount": "SUPERMARKET-8899",
-      "createdAt": "2025-07-12T12:00:00Z"
+      "id": "cae8",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "35886695",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:11:25.390Z"
     },
     {
-      "id": 1003,
-      "accountId": 102,
-      "categoryId": 3,
-      "type": "payment",
-      "amount": 150000,
-      "description": "Langganan Netflix",
-      "status": "success",
-      "receiverAccount": "NETFLIX-ACCOUNT-021234",
-      "createdAt": "2025-07-12T13:00:00Z"
+      "id": "ad42",
+      "type": "internal",
+      "amount": 99.96,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:13:40.313Z"
     },
     {
-      "id": 1004,
-      "accountId": 101,
-      "categoryId": 1,
-      "type": "transfer",
-      "amount": 1000000,
-      "description": "Transfer ke Dina Aulia",
-      "status": "success",
-      "receiverAccount": "9876543210",
-      "createdAt": "2025-07-12T14:00:00Z"
+      "id": "94d0",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:16:59.895Z"
     },
     {
-      "id": 1005,
-      "accountId": 101,
-      "categoryId": 1,
-      "type": "transfer",
-      "amount": 500000,
-      "description": "Transfer ke Angga Yunandra",
-      "status": "success",
-      "receiverAccount": "1122334455",
-      "createdAt": "2025-07-12T14:30:00Z"
+      "id": "65eb",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:18:13.631Z"
     },
     {
-      "id": 1006,
-      "accountId": 103,
-      "categoryId": 3,
-      "type": "payment",
-      "amount": 55000,
-      "description": "Langganan Spotify",
-      "status": "success",
-      "receiverAccount": "SPOTIFY-USER-00321",
-      "createdAt": "2025-07-12T15:00:00Z"
+      "id": "f1c7",
+      "type": "internal",
+      "amount": 14,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:19:45.999Z"
+    },
+    {
+      "id": "1198",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:24:58.054Z"
+    },
+    {
+      "id": "3ad6",
+      "type": "internal",
+      "amount": 100,
+      "description": "cek",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:27:49.084Z"
+    },
+    {
+      "id": "313a",
+      "type": "internal",
+      "amount": 99,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:28:21.462Z"
+    },
+    {
+      "id": "72e9",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:32:24.982Z"
+    },
+    {
+      "id": "8aca",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:37:06.388Z"
+    },
+    {
+      "id": "9eab",
+      "type": "internal",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:37:59.704Z"
+    },
+    {
+      "id": "23da",
+      "type": "internal",
+      "amount": 99.96,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "69673114",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:42:42.352Z"
+    },
+    {
+      "id": "e0dc",
+      "type": "internal",
+      "amount": 99.9,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "35886695",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T11:49:19.089Z"
+    },
+    {
+      "id": "6cfb",
+      "type": "external",
+      "amount": 100,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "35886695",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T12:07:01.863Z"
+    },
+    {
+      "id": "59d3",
+      "type": "internal",
+      "amount": 89.95,
+      "description": "",
+      "categoryId": "5",
+      "sourceAccount": "35886695",
+      "receiverAccount": "83911503",
+      "createdAt": "2025-07-13T12:11:06.110Z"
     }
   ]
 }

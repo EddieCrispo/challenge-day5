@@ -18,8 +18,8 @@ export default function AccountSection() {
     <>
       {loading ? (
         <>
-          <div className="flex gap-6 overflow-x-auto px-1 pb-2">
-            <div className="w-[80px] h-[80px] bg-gradient-to-r from-gray-300 to-gray-200 rounded-lg p-6 border border-gray-200 animate-pulse flex flex-col justify-between"></div>
+          <div className="flex gap-4 overflow-x-auto mb-6">
+            <div className="w-[80px] bg-gradient-to-r from-gray-300 to-gray-200 rounded-lg p-6 border border-gray-200 animate-pulse flex flex-col justify-between"></div>
 
             {Array.from({ length: 3 }, (_, i) => (
               <div key={i} className="min-w-[360px] flex-shrink-0">
@@ -29,8 +29,8 @@ export default function AccountSection() {
           </div>
         </>
       ) : (
-        <div className="flex gap-6 overflow-x-auto px-1 pb-2">
-          <div className="w-[80px] flex-shrink-0 flex items-center justify-center h-[80px] bg-slate-100 hover:bg-slate-200 transition cursor-pointer rounded-lg p-6 border border-gray-200 overflow-hidden">
+        <div className="flex gap-4 overflow-x-auto mb-6">
+          <div className="w-[80px] flex-shrink-0 flex items-center justify-center bg-slate-100 hover:bg-slate-200 transition cursor-pointer rounded-lg p-6 border border-slate-200 overflow-hidden">
             <Plus className="h-8 w-8 text-slate-600" />
           </div>
 

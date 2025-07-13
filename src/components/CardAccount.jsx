@@ -20,7 +20,7 @@ export function CardAccount({ accountType, accountNumber, balance }) {
     <div
       className={cx(
         `bg-gradient-to-r ${gradientColor}`,
-        "relative h-[12rem] rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between overflow-hidden"
+        "relative h-[12rem] rounded-lg shadow-md p-6 flex flex-col justify-between overflow-hidden"
       )}
     >
       {/* Vignette ornaments */}
@@ -37,7 +37,7 @@ export function CardAccount({ accountType, accountNumber, balance }) {
       <div>
         <p className="text-sm text-white mb-1">Balance</p>
         <p className="text-2xl font-semibold text-white">
-          $ {Number(balance).toLocaleString()}
+          ${Number(balance).toLocaleString()}
         </p>
       </div>
     </div>
