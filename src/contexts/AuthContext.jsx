@@ -1,6 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { faker } from "@faker-js/faker";
 import { createContext, useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const TOKEN_KEY = "auth_token";
 
@@ -44,9 +46,12 @@ export const AuthProvider = ({ children }) => {
       Cookies.set(TOKEN_KEY, token, { expires: 7 });
 
       setUser(user);
+      toast.success("Login successful!");
       return user;
     } catch (err) {
-      setError(err.message || "Login failed");
+      const message = err.message || "Login failed.";
+      setError(message);
+      toast.error(message);
       throw err;
     } finally {
       setLoading(false);
@@ -58,8 +63,50 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const register = async (newUser) => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const { accountType, agreeToPolicies, ...payloadUser } = newUser;
+      const resUser = await axios.post(
+        "https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/users",
+        payloadUser
+      );
+      const createdUser = resUser.data;
+
+      const accountPayload = {
+        userId: createdUser.id,
+        accountType: accountType,
+        accountNumber: faker.finance.accountNumber(),
+        createdAt: newUser.createdAt,
+        balance: 0,
+      };
+
+      await axios.post(
+        "https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/accounts",
+        accountPayload
+      );
+
+      const token = btoa(JSON.stringify(createdUser));
+      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+      setUser(createdUser);
+      toast.success("Registration successful!");
+      return createdUser;
+    } catch (err) {
+      const message = err.message || "Registration failed.";
+      setError(message);
+      toast.error(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, error, login, logout, register }}
+    >
       {children}
     </AuthContext.Provider>
   );
