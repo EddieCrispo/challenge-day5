@@ -12,50 +12,67 @@ import ProtectedLayout from "./components/ProtectedLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import TransactionList from "./pages/TransactionList";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <AuthProvider>
-      <TransactionProvider>
-        <Routes>
-          <Route path="/" element={<Navigate to="/transfer" replace />} />
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
 
-          <Route
-            path="/login"
-            element={
-              <PublicLayout>
-                <LoginPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicLayout>
-                <RegisterPage />
-              </PublicLayout>
-            }
-          />
-          <Route
-            path="/transfer"
-            element={
-              <ProtectedLayout>
-                <Transfer />
-              </ProtectedLayout>
-            }
-          />
+      <AuthProvider>
+        <TransactionProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/transfer" replace />} />
 
-          <Route
-            path="/transfer"
-            element={
-              <ProtectedLayout>
-                <TransactionList />
-              </ProtectedLayout>
-            }
-          />
-        </Routes>
-      </TransactionProvider>
-    </AuthProvider>
+            <Route
+              path="/login"
+              element={
+                <PublicLayout>
+                  <LoginPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicLayout>
+                  <RegisterPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/transfer"
+              element={
+                <ProtectedLayout>
+                  <Transfer />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/transfer"
+              element={
+                <ProtectedLayout>
+                  <TransactionList />
+                </ProtectedLayout>
+              }
+            />
+          </Routes>
+        </TransactionProvider>
+      </AuthProvider>
+    </>
   );
 }
 
