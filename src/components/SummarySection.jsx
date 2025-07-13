@@ -1,13 +1,35 @@
 import { ArrowDownRight, DollarSign, TrendingUp } from "lucide-react";
 import { useAccountStore } from "../stores/accountStore";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useTransactionStore } from "../stores/transactionStore";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function SummarySection({}) {
-  const { accounts, loading, error, fetchAccounts } = useAccountStore();
+  const { user } = useAuth();
+  const { accounts, loading } = useAccountStore();
+  const { transactions, fetchTransactions } = useTransactionStore();
 
   const totalBalance = useMemo(() => {
     return accounts.reduce((acc, curr) => acc + Number(curr.balance || 0), 0);
   }, [accounts]);
+
+  const totalIncome = useMemo(() => {
+    return transactions
+      .filter((item) => item.receiverUserId === user.id)
+      .reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+  }, [transactions]);
+
+  const totalExpense = useMemo(() => {
+    return transactions
+      .filter((item) => item.userId === user.id)
+      .reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+  }, [transactions]);
+
+  useEffect(() => {
+    if (user.id) {
+      fetchTransactions(user.id);
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -37,7 +59,7 @@ export default function SummarySection({}) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Income</p>
-            <p className="text-2xl font-bold text-green-600">$24124</p>
+            <p className="text-2xl font-bold text-green-600">${totalIncome}</p>
           </div>
           <div className="bg-green-200 p-3 rounded-lg">
             <TrendingUp className="w-6 h-6 text-green-600" />
@@ -49,7 +71,7 @@ export default function SummarySection({}) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Expenses</p>
-            <p className="text-2xl font-bold text-red-600">$124124</p>
+            <p className="text-2xl font-bold text-red-600">${totalExpense}</p>
           </div>
           <div className="bg-red-200 p-3 rounded-lg">
             <ArrowDownRight className="w-6 h-6 text-red-600" />

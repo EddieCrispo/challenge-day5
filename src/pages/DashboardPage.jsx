@@ -3,12 +3,7 @@ import AccountSection from "../components/AccountSection";
 import SummarySection from "../components/SummarySection";
 import { useAuth } from "../contexts/AuthContext";
 import { TransactionContext } from "../contexts/TransactionContext";
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  DollarSign,
-  TrendingUp,
-} from "lucide-react";
+import { useAccountStore } from "../stores/accountStore";
 
 export default function DashboardPage() {
   const { user } = useAuth(); // user.id must be available

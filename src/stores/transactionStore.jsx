@@ -1,26 +1,33 @@
-import { create } from "zustand";
-import axiosInstance from "../utils/axiosInstance";
 import axios from "axios";
-
-const API_URL = "/transactions";
+import { create } from "zustand";
 
 export const useTransactionStore = create((set) => ({
   transactions: [],
   loading: false,
   error: "",
+  filter: "",
+  searchTerm: "",
+  setFilter: (newFilter) => set({ filter: newFilter }),
+  setSearchTerm: (newSearchTerm) => set({ searchTerm: newSearchTerm }),
 
   // GET transactions
-  fetchTransactions: async () => {
+  fetchTransactions: async (userId) => {
     set({ loading: true, error: "" });
     try {
-      const response = await axiosInstance.get(API_URL);
-      set({ transactions: response.data, loading: false });
+      const response = await axios.get(
+        "https://6873a41cc75558e27354cd24.mockapi.io/api/v1/transactions"
+      );
+      set({
+        transactions: response.data?.filter(
+          (item) => item.userId === userId || item.receiverUserId === userId
+        ),
+        loading: false,
+      });
     } catch (error) {
       set({
         error: "Failed to fetch transactions",
         loading: false,
       });
-      console.error(error);
     }
   },
 
@@ -31,10 +38,13 @@ export const useTransactionStore = create((set) => ({
         type: newTransaction.type,
         amount: newTransaction.amount,
         description: newTransaction.description || "",
-        categoryId: newTransaction.categoryId || "5",
+        categoryId: newTransaction.category || "5",
         sourceAccount: newTransaction.sourceAccount,
         receiverAccount: newTransaction.recipient,
         createdAt: new Date(),
+        userId: newTransaction.userId,
+        categoryName: newTransaction.categoryName || "",
+        receiverUserId: newTransaction.receiverUserId,
       };
 
       await axios.post(

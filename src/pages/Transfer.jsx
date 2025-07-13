@@ -140,7 +140,18 @@ const Transfer = () => {
 
   const handleSubmit = async () => {
     try {
-      await createTransaction(formik.values, receiverAccount, sourceAccount);
+      await createTransaction(
+        {
+          ...formik.values,
+          userId: user.id,
+          categoryName:
+            categories.find((item) => item.id === formik.values.category)
+              .name || "",
+          receiverUserId: receiverAccount.userId,
+        },
+        receiverAccount,
+        sourceAccount
+      );
       fetchAccounts();
       setIsSuccess(true);
     } catch (error) {
