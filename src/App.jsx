@@ -15,6 +15,10 @@ import TransactionList from "./pages/TransactionList";
 import { Bounce, ToastContainer } from "react-toastify";
 import DashboardPage from "./pages/DashboardPage";
 import Profile from "./components/Profile";
+import Insight from "./pages/Insight";
+
+// Chart
+import '../src/utils/chart';
 
 function App() {
   return (
@@ -70,6 +74,15 @@ function App() {
               element={
                 <ProtectedLayout>
                   <Transfer />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/insight"
+              element={
+                <ProtectedLayout>
+                  <Insight />
                 </ProtectedLayout>
               }
             />
