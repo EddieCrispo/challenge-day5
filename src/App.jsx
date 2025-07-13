@@ -62,7 +62,7 @@ function App() {
             />
 
             <Route
-              path="/transfer"
+              path="/transaction"
               element={
                 <ProtectedLayout>
                   <TransactionList />
