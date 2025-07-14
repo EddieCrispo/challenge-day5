@@ -33,8 +33,9 @@ const Sidebar = () => {
     {
       name: "Profile",
       icon: <UsersIcon className="w-5 h-5" />,
-      path: "/Profile",
+      path: "/profile",
     },
+    { name: "Transfer", icon: <Send className="w-5 h-5" />, path: "/transfer" },
     {
       name: "Transactions",
       icon: <ArrowRightLeft className="w-5 h-5" />,
@@ -45,7 +46,6 @@ const Sidebar = () => {
       icon: <Tag className="w-5 h-5" />,
       path: "/categorization",
     },
-    { name: "Transfer", icon: <Send className="w-5 h-5" />, path: "/transfer" },
     { name: "Insight", icon: <Brain className="w-5 h-5" />, path: "/insight" },
   ];
 
@@ -76,7 +76,7 @@ const Sidebar = () => {
 
       <nav className="flex flex-col space-y-4">
         {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname.startsWith(item.path);
 
           return (
             <Link
