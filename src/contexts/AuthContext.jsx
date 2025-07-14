@@ -101,9 +101,48 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async (userData) => {
+    setLoading(true);
+    setError("");
+
+    try {
+      if (!user || !user.id) {
+        throw new Error("No user logged in");
+      }
+
+      // Update user data via MockAPI
+      const response = await axios.put(
+        `https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/users/${user.id}`,
+        userData
+      );
+
+      const updatedUser = response.data;
+
+      // Update the token in cookies with new user data
+      const token = btoa(JSON.stringify(updatedUser));
+      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+
+      // Update local state
+      setUser(updatedUser);
+
+      toast.success("Profile updated successfully!");
+      return updatedUser;
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to update profile";
+      setError(message);
+      toast.error(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, error, login, logout, register }}
+      value={{ user, loading, error, login, logout, register, updateUser }}
     >
       {children}
     </AuthContext.Provider>
