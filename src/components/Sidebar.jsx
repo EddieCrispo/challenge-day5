@@ -1,6 +1,6 @@
 // Sidebar.jsx
 import cx from "classnames";
-import { ArrowRightLeft, Home, LogOut, Send, UsersIcon } from "lucide-react";
+import { ArrowRightLeft, Brain, Home, LogOut, Send, UsersIcon } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { useAccountStore } from "../stores/accountStore";
@@ -35,6 +35,7 @@ const Sidebar = () => {
       path: "/transaction",
     },
     { name: "Transfer", icon: <Send className="w-5 h-5" />, path: "/transfer" },
+    { name: "Insight", icon: <Brain className="w-5 h-5" />, path: "/insight" },
   ];
 
   const handleLogout = () => logout();
