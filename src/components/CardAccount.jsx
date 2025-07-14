@@ -1,4 +1,6 @@
 import cx from "classnames";
+import { useSelectedAccountStore } from "../stores/selectedAccountStore";
+import { Pin, Star } from "lucide-react";
 
 const cardColorMap = new Map([
   ["Home Loan Account", "from-teal-400 to-teal-500"],
@@ -12,32 +14,47 @@ const cardColorMap = new Map([
   ["Auto Loan Account", "from-lime-400 to-lime-500"],
 ]);
 
-export function CardAccount({ accountType, accountNumber, balance }) {
+export function CardAccount({ account }) {
   const gradientColor =
-    cardColorMap.get(accountType) || "from-gray-400 to-gray-500";
+    cardColorMap.get(account.accountType) || "from-gray-400 to-gray-500";
+
+  const { selectedAccount, setSelectedAccount } = useSelectedAccountStore();
+
+  const isSelectedAccount =
+    account.accountNumber === selectedAccount?.accountNumber;
 
   return (
     <div
+      onClick={() => {
+        if (!isSelectedAccount) {
+          setSelectedAccount(account);
+        }
+      }}
       className={cx(
+        { "border-6 border-sky-500": isSelectedAccount },
         `bg-gradient-to-r ${gradientColor}`,
-        "relative h-[12rem] rounded-lg shadow-md p-6 flex flex-col justify-between overflow-hidden"
+        "relative h-[12rem] rounded-lg shadow-md p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
       )}
     >
+      {isSelectedAccount && (
+        <Star className="absolute right-0 top-0 h-8 w-8 m-2 stroke-white" />
+      )}
+
       {/* Vignette ornaments */}
       <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 rounded-full transform translate-x-1/2 translate-y-1/2 pointer-events-none" />
       <div className="absolute right-0 bottom-0 w-32 h-32 bg-white/10 rounded-full transform translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
       <div>
-        <p className="text-sm text-white mb-1">{accountType}</p>
+        <p className="text-sm text-white mb-1">{account.accountType}</p>
         <h2 className="text-xl font-semibold text-white mb-2">
-          {accountNumber}
+          {account.accountNumber}
         </h2>
       </div>
 
       <div>
         <p className="text-sm text-white mb-1">Balance</p>
         <p className="text-2xl font-semibold text-white">
-          ${Number(balance).toLocaleString()}
+          ${Number(account.balance).toLocaleString()}
         </p>
       </div>
     </div>
