@@ -31,7 +31,7 @@ export function CardAccount({ account }) {
         }
       }}
       className={cx(
-        { "border-6 border-sky-500": isSelectedAccount },
+        { "border-4 border-gray-800 dark:border-gray-50": isSelectedAccount },
         `bg-gradient-to-r ${gradientColor}`,
         "relative h-[12rem] rounded-lg shadow-md dark:shadow-lg p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
       )}
