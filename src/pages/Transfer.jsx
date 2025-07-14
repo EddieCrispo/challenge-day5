@@ -157,8 +157,8 @@ const Transfer = () => {
           ...formik.values,
           userId: user.id,
           categoryName:
-            categories.find((item) => item.id === formik.values.category)
-              .name || "",
+            categories?.find((item) => item.id === formik.values.category)
+              ?.name || "",
           receiverUserId: receiverAccount.userId,
         },
         receiverAccount,
@@ -219,20 +219,22 @@ const Transfer = () => {
       fetchAccounts(user.id);
       fetchCategories();
     }
+
+    resetWizard();
   }, [user]);
 
   if (isSuccess) {
     return (
       <div className="max-w-2xl mx-auto space-y-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
           <div className="text-center space-y-6">
-            <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className="bg-green-100 dark:bg-green-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Transfer Successful!
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Successfully transfer $
               {parseFloat(formik.values.amount).toLocaleString()} to{" "}
               {formik.values.recipient}.
@@ -242,7 +244,7 @@ const Transfer = () => {
               <button
                 type="button"
                 onClick={resetTransfer}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
               >
                 Send Another Transfer
               </button>
@@ -250,7 +252,7 @@ const Transfer = () => {
               <button
                 type="button"
                 onClick={redirectListTransaction}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
               >
                 See Transaction List
               </button>
@@ -264,12 +266,11 @@ const Transfer = () => {
   return (
     <div className="w-full space-y-6">
       <div>
-        <h1 className="text-2xl font-bold mb-0">Transfer</h1>
-
-        <p className="text-gray-600">Send money quickly and securely</p>
+        <h1 className="text-2xl font-bold mb-0 text-gray-900 dark:text-white">Transfer</h1>
+        <p className="text-gray-600 dark:text-gray-300">Send money quickly and securely</p>
       </div>
 
-      <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-gray-100 dark:border-slate-700">
         {/* Progress Bar */}
         <Steps length={3} current={step} circleSize={56} fontSize={18} />
 
@@ -277,12 +278,12 @@ const Transfer = () => {
           {/* Step 0: Recipient Details */}
           {step === 0 && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Recipient Details
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Transfer Type
                   </label>
                   <select
@@ -290,7 +291,7 @@ const Transfer = () => {
                     value={formik.values.type}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                   >
                     <option value="internal">Internal Transfer</option>
                     <option value="external">External Transfer</option>
@@ -303,7 +304,7 @@ const Transfer = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Recipient Account
                   </label>
                   <input
@@ -313,10 +314,10 @@ const Transfer = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     placeholder="Enter account number"
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
                       formik.touched.recipient && formik.errors.recipient
-                        ? "border-red-300"
-                        : "border-gray-300"
+                        ? "border-red-300 dark:border-red-600"
+                        : "border-gray-300 dark:border-slate-600"
                     }`}
                   />
                   {formik.touched.recipient && formik.errors.recipient && (
@@ -338,16 +339,16 @@ const Transfer = () => {
           {/* Step 1: Transfer Amount */}
           {step === 1 && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Transfer Amount
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Amount
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
                       $
                     </span>
                     <input
@@ -358,10 +359,10 @@ const Transfer = () => {
                       onBlur={formik.handleBlur}
                       placeholder="0.00"
                       step="0.01"
-                      className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      className={`w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
                         formik.touched.amount && formik.errors.amount
-                          ? "border-red-300"
-                          : "border-gray-300"
+                          ? "border-red-300 dark:border-red-600"
+                          : "border-gray-300 dark:border-slate-600"
                       }`}
                     />
                   </div>
@@ -373,7 +374,7 @@ const Transfer = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Category (Optional)
                   </label>
                   <select
@@ -381,7 +382,7 @@ const Transfer = () => {
                     value={formik.values.category}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                   >
                     <option value="">Select category</option>
                     {categories.map((option) => (
@@ -393,7 +394,7 @@ const Transfer = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Description (Optional)
                   </label>
                   <input
@@ -403,12 +404,12 @@ const Transfer = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     placeholder="What's this for?"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Source Account
                 </label>
                 <select
@@ -426,7 +427,7 @@ const Transfer = () => {
                     }
                   }}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Select source account</option>
                   {accounts.map((acc) => (
@@ -449,36 +450,36 @@ const Transfer = () => {
           {/* Step 2: Review Transfer */}
           {step === 2 && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Review Transfer
               </h2>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4 space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">From:</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">From:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
                     {user?.name || "Your Account"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">To:</span>
-                  <span className="font-medium">{formik.values.recipient}</span>
+                  <span className="text-gray-600 dark:text-gray-400">To:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{formik.values.recipient}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Amount:</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">Amount:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
                     ${parseFloat(formik.values.amount || 0).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Type:</span>
-                  <span className="font-medium capitalize">
+                  <span className="text-gray-600 dark:text-gray-400">Type:</span>
+                  <span className="font-medium capitalize text-gray-900 dark:text-white">
                     {formik.values.type}
                   </span>
                 </div>
                 {formik.values.category && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Category:</span>
-                    <span className="font-medium capitalize">
+                    <span className="text-gray-600 dark:text-gray-400">Category:</span>
+                    <span className="font-medium capitalize text-gray-900 dark:text-white">
                       {categories.find(
                         (opt) => opt.id === formik.values.category
                       )?.name || formik.values.category}
@@ -487,15 +488,15 @@ const Transfer = () => {
                 )}
                 {formik.values.description && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Description:</span>
-                    <span className="font-medium">
+                    <span className="text-gray-600 dark:text-gray-400">Description:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">
                       {formik.values.description}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-gray-600">From:</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">From:</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
                     {
                       accounts.find(
                         (acc) =>
@@ -515,7 +516,7 @@ const Transfer = () => {
               <button
                 type="button"
                 onClick={handlePrevStep}
-                className="w-full bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors"
+                className="w-full bg-gray-200 dark:bg-slate-600 text-gray-800 dark:text-white px-4 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-500 transition-colors"
               >
                 Back
               </button>

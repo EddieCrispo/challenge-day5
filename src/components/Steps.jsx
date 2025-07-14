@@ -13,10 +13,10 @@ export default function Steps({
           {/* Step Circle */}
           <div
             style={{ width: circleSize, height: circleSize, fontSize }}
-            className={`rounded-full flex items-center justify-center ${
+            className={`rounded-full flex items-center justify-center transition-colors ${
               current >= stepNum
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-600"
+                ? "bg-blue-600 dark:bg-blue-500 text-white"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
             }`}
           >
             {stepNum + 1}
@@ -25,8 +25,8 @@ export default function Steps({
           {/* Tail (Line) - only if not the last step */}
           {stepNum < length - 1 && (
             <div
-              className={`flex-1 h-1 mx-2 ${
-                current > stepNum ? "bg-blue-600" : "bg-gray-200"
+              className={`flex-1 h-1 mx-2 transition-colors ${
+                current > stepNum ? "bg-blue-600 dark:bg-blue-500" : "bg-gray-200 dark:bg-gray-700"
               }`}
             />
           )}

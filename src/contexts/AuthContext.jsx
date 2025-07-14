@@ -1,13 +1,12 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { faker } from "@faker-js/faker";
 import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 
 const TOKEN_KEY = "auth_token";
 
-const getUserFromCookie = () => {
-  const token = Cookies.get(TOKEN_KEY);
+const getUserFromSessionStorage = () => {
+  const token = sessionStorage.getItem(TOKEN_KEY);
   if (!token) return null;
 
   try {
@@ -21,7 +20,7 @@ const getUserFromCookie = () => {
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(getUserFromCookie());
+  const [user, setUser] = useState(getUserFromSessionStorage());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,12 +37,11 @@ export const AuthProvider = ({ children }) => {
       );
 
       const user = res.data[0];
-
       if (!user) throw new Error("Invalid email or password");
 
       // Simulate token creation (base64)
       const token = btoa(JSON.stringify(user));
-      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+      sessionStorage.setItem(TOKEN_KEY, token);
 
       setUser(user);
       toast.success("Login successful!");
@@ -59,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    Cookies.remove(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
     setUser(null);
   };
 
@@ -89,7 +87,7 @@ export const AuthProvider = ({ children }) => {
       );
 
       const token = btoa(JSON.stringify(createdUser));
-      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+      sessionStorage.setItem(TOKEN_KEY, token);
       setUser(createdUser);
       toast.success("Registration successful!");
       return createdUser;
@@ -103,16 +101,54 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async (userData) => {
+    setLoading(true);
+    setError("");
+
+    try {
+      if (!user || !user.id) {
+        throw new Error("No user logged in");
+      }
+
+      // Update user data via MockAPI
+      const response = await axios.put(
+        `https://6871fab176a5723aacd33ea6.mockapi.io/api/v1/users/${user.id}`,
+        userData
+      );
+
+      const updatedUser = response.data;
+
+      // Update the token in cookies with new user data
+      const token = btoa(JSON.stringify(updatedUser));
+      sessionStorage.setItem(TOKEN_KEY, token);
+
+      // Update local state
+      setUser(updatedUser);
+
+      toast.success("Profile updated successfully!");
+      return updatedUser;
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to update profile";
+      setError(message);
+      toast.error(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, error, login, logout, register }}
+      value={{ user, loading, error, login, logout, register, updateUser }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

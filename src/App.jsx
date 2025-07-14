@@ -1,5 +1,6 @@
 // Components
 import PublicLayout from "./components/PublicLayout";
+import DarkModeToggle from "./components/DarkModeToggle";
 
 // Router
 import { Navigate, Route, Routes } from "react-router";
@@ -15,6 +16,12 @@ import TransactionList from "./pages/TransactionList";
 import { Bounce, ToastContainer } from "react-toastify";
 import DashboardPage from "./pages/DashboardPage";
 import Profile from "./components/Profile";
+import EditProfile from "./components/EditProfile";
+import Insight from "./pages/Insight";
+
+// Chart
+import "../src/utils/chart";
+import CategorizationPage from "./pages/CategorizationPage";
 
 function App() {
   return (
@@ -35,6 +42,9 @@ function App() {
 
       <AuthProvider>
         <TransactionProvider>
+          <div className="fixed top-4 right-4 z-50">
+            <DarkModeToggle />
+          </div>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
@@ -66,6 +76,15 @@ function App() {
             />
 
             <Route
+              path="/profile-edit"
+              element={
+                <ProtectedLayout>
+                  <EditProfile />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
               path="/transfer"
               element={
                 <ProtectedLayout>
@@ -75,10 +94,28 @@ function App() {
             />
 
             <Route
+              path="/insight"
+              element={
+                <ProtectedLayout>
+                  <Insight />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
               path="/transaction"
               element={
                 <ProtectedLayout>
                   <TransactionList />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/categorization"
+              element={
+                <ProtectedLayout>
+                  <CategorizationPage />
                 </ProtectedLayout>
               }
             />

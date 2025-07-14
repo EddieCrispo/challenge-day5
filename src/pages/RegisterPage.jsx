@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
-import { ArrowRight, User } from "lucide-react";
+import { ArrowRight, User, Eye, EyeOff } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import * as Yup from "yup";
-import { Input, InputPassword } from "../components/Input";
 import Steps from "../components/Steps";
 import { useAuth } from "../contexts/AuthContext";
 import { faker } from "@faker-js/faker";
+import DarkModeToggle from "../components/DarkModeToggle";
 
 const FORM_STORAGE_KEY = "register_form_progress";
 
@@ -36,6 +36,8 @@ const defaultValues = {
 const RegisterPage = () => {
   const { register, loading, error } = useAuth();
   const [step, setStep] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: getInitialValues(),
@@ -133,17 +135,17 @@ const RegisterPage = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 md:p-0">
+    <div className="w-full max-w-md relative dark:bg-gray-800">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-4">
           <div className="bg-gradient-to-r from-green-600 to-blue-600 p-3 rounded-2xl">
             <User className="w-8 h-8 text-white" />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Create Account
         </h1>
-        <p className="text-gray-600">Join BankTech Pro today</p>
+        <p className="text-gray-600 dark:text-gray-300">Join BankTech Pro today</p>
       </div>
 
       <Steps current={step} length={4} />
@@ -151,120 +153,209 @@ const RegisterPage = () => {
       <form className="space-y-6 mt-6">
         {step === 0 && (
           <>
-            <Input
-              label="Full Name"
-              name="name"
-              placeholder="Enter your full name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.name && formik.errors.name}
-            />
-            <Input
-              label="Phone Number"
-              name="phoneNumber"
-              placeholder="Enter your phone number"
-              value={formik.values.phoneNumber}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.phoneNumber && formik.errors.phoneNumber}
-            />
-            <Input
-              label="Address"
-              name="address"
-              placeholder="Enter your address"
-              value={formik.values.address}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.address && formik.errors.address}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your full name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              {formik.touched.name && formik.errors.name && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.name}</p>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Phone Number
+              </label>
+              <input
+                type="text"
+                name="phoneNumber"
+                placeholder="Enter your phone number"
+                value={formik.values.phoneNumber}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.phoneNumber}</p>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Address
+              </label>
+              <input
+                type="text"
+                name="address"
+                placeholder="Enter your address"
+                value={formik.values.address}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              {formik.touched.address && formik.errors.address && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.address}</p>
+                </div>
+              )}
+            </div>
           </>
         )}
 
         {step === 1 && (
           <>
-            <Input
-              label="Email Address"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.email && formik.errors.email}
-            />
-            <InputPassword
-              label="Password"
-              name="password"
-              placeholder="Enter a strong password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.password && formik.errors.password}
-            />
-            <InputPassword
-              label="Confirm Password"
-              name="confirmPassword"
-              placeholder="Re-type your password"
-              value={formik.values.confirmPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-              }
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.email}</p>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter a strong password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+              {formik.touched.password && formik.errors.password && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.password}</p>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Re-type your password"
+                  value={formik.values.confirmPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+              {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.confirmPassword}</p>
+                </div>
+              )}
+            </div>
           </>
         )}
 
         {step === 2 && (
           <>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Account Type
-            </label>
-            <select
-              name="accountType"
-              value={formik.values.accountType}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            >
-              <option value="" disabled>
-                Select account type
-              </option>
-              {accountTypeOptions.map((name, index) => (
-                <option key={index} value={name}>
-                  {name}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Account Type
+              </label>
+              <select
+                name="accountType"
+                value={formik.values.accountType}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                <option value="" disabled>
+                  Select account type
                 </option>
-              ))}
-            </select>
-            {formik.touched.accountType && formik.errors.accountType && (
-              <p className="text-red-500 text-sm mt-[-24px]">
-                {formik.errors.accountType}
-              </p>
-            )}
+                {accountTypeOptions.map((name, index) => (
+                  <option key={index} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.accountType && formik.errors.accountType && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.accountType}</p>
+                </div>
+              )}
+            </div>
           </>
         )}
 
         {step === 3 && (
           <>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <h2 className="text-xl font-semibold text-blue-800 mb-2">
+            <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <h2 className="text-xl font-semibold text-blue-800 dark:text-blue-300 mb-2">
                 Review Your Information
               </h2>
               <div className="mt-4 text-left space-y-2">
-                <p>
+                <p className="text-gray-700 dark:text-gray-300">
                   <strong>Name:</strong> {formik.values.name}
                 </p>
-                <p>
+                <p className="text-gray-700 dark:text-gray-300">
                   <strong>Phone:</strong> {formik.values.phoneNumber}
                 </p>
-                <p>
+                <p className="text-gray-700 dark:text-gray-300">
                   <strong>Address:</strong> {formik.values.address}
                 </p>
-                <p>
+                <p className="text-gray-700 dark:text-gray-300">
                   <strong>Email:</strong> {formik.values.email}
                 </p>
-                <p>
+                <p className="text-gray-700 dark:text-gray-300">
                   <strong>Account Type:</strong> {formik.values.accountType}
                 </p>
               </div>
@@ -280,9 +371,9 @@ const RegisterPage = () => {
                   onBlur={formik.handleBlur}
                   className="mt-1"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-gray-700 dark:text-gray-300">
                   I agree with the{" "}
-                  <a href="#" className="text-blue-600 underline">
+                  <a href="#" className="text-blue-600 dark:text-blue-400 underline">
                     rules & policies
                   </a>
                   .
@@ -290,17 +381,17 @@ const RegisterPage = () => {
               </label>
               {formik.touched.agreeToPolicies &&
                 formik.errors.agreeToPolicies && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {formik.errors.agreeToPolicies}
-                  </p>
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-2">
+                    <p className="text-red-600 dark:text-red-400 text-sm">{formik.errors.agreeToPolicies}</p>
+                  </div>
                 )}
             </div>
           </>
         )}
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-600 text-sm">{error}</p>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
           </div>
         )}
 
@@ -309,7 +400,7 @@ const RegisterPage = () => {
             <button
               type="button"
               onClick={prevStep}
-              className="w-full bg-gray-300 px-4 py-2 rounded-lg text-gray-800 hover:bg-stone-300 transition-all cursor-pointer"
+              className="w-full bg-gray-300 dark:bg-gray-600 px-4 py-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-stone-300 dark:hover:bg-gray-500 transition-all cursor-pointer"
             >
               Back
             </button>
@@ -327,7 +418,7 @@ const RegisterPage = () => {
               type="button"
               onClick={formik.handleSubmit}
               disabled={loading}
-              className="cursor-pointer h-10 w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-green-700 hover:to-blue-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-green-700 hover:to-blue-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -343,10 +434,10 @@ const RegisterPage = () => {
       </form>
 
       <div className="mt-8 text-center">
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-300">
           Already have an account?{" "}
           <Link to="/login">
-            <button className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
+            <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium cursor-pointer">
               Sign in
             </button>
           </Link>
