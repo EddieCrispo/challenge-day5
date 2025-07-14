@@ -22,30 +22,25 @@ function Insight() {
         }
     }, [user]);
 
-    // Breakdown pengeluaran berdasarkan kategori
-    const expenseByCategory = useMemo(() => {
-        const grouped = {};
-        transactions
-            .filter(tx => tx.userId === user.id)
-            .forEach(tx => {
-                const category = tx.category || 'Other';
-                grouped[category] = (grouped[category] || 0) + Number(tx.amount || 0);
-            });
-        return grouped;
-    }, [transactions]);
-
     const expenseByCategoryDetailed = useMemo(() => {
         const grouped = {};
 
+        // Inisialisasi semua kategori dengan 0
+        categories.forEach(cat => {
+            grouped[cat.id] = 0;
+        });
+
+        // Tambahkan nominal dari transaksi sesuai kategori
         transactions
-            .filter(tx => tx.userId === user.id)
             .forEach(tx => {
-                const categoryId = tx.categoryId || 'uncategorized';
-                grouped[categoryId] = (grouped[categoryId] || 0) + Number(tx.amount || 0);
+                const categoryId = tx.categoryId;
+                if (categoryId && grouped.hasOwnProperty(categoryId)) {
+                    grouped[categoryId] += Number(tx.amount || 0);
+                }
             });
 
         return grouped;
-    }, [transactions]);
+    }, [transactions, categories]);
 
     const lineChartData = useMemo(() => {
         const income = [];
@@ -108,57 +103,24 @@ function Insight() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {categories.map((cat) => {
-                    const amount = expenseByCategoryDetailed[cat.id];
-
-                    if (!amount) return null; // Skip jika kategori tidak punya transaksi
-
-                    return (
-                        <div key={cat.id} className="bg-white rounded-xl shadow p-4">
-                            <h3 className="text-lg font-semibold mb-4">
-                                Expense in Category: {cat.name}
-                            </h3>
-                            <Pie
-                                data={{
-                                    labels: [cat.name],
-                                    datasets: [
-                                        {
-                                            data: [amount],
-                                            backgroundColor: ['#f87171'],
-                                        },
-                                    ],
-                                }}
-                                options={{
-                                    plugins: {
-                                        legend: {
-                                            display: false,
-                                        },
-                                    },
-                                }}
-                            />
-                        </div>
-                    );
-                })}
-            </div> */}
 
             <div className="bg-white rounded-xl shadow p-4">
                 <h3 className="text-lg font-semibold mb-4">Expenses by Category</h3>
                 <div className='w-[600px] h-[600px] mx-auto'>
                     <Pie
                         data={{
-                            labels: categories
-                                .filter(cat => expenseByCategoryDetailed[cat.id])
-                                .map(cat => cat.name),
+                            labels: categories.map(cat => cat.name),
                             datasets: [
                                 {
-                                    data: categories
-                                        .filter(cat => expenseByCategoryDetailed[cat.id])
-                                        .map(cat => expenseByCategoryDetailed[cat.id]),
-                                    backgroundColor: [
-                                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-                                        '#F472B6', '#60A5FA', '#FCD34D', '#10B981', '#8B5CF6'
-                                    ],
+                                    data: categories.map(cat => expenseByCategoryDetailed[cat.id] || 0),
+                                    backgroundColor: categories.map((_, i) => {
+                                        const colors = [
+                                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                                            '#F472B6', '#60A5FA', '#FCD34D', '#10B981', '#8B5CF6',
+                                            '#E879F9', '#FDBA74', '#A78BFA', '#34D399', '#FCA5A5'
+                                        ];
+                                        return colors[i % colors.length];
+                                    })
                                 }
                             ]
                         }}
@@ -176,7 +138,6 @@ function Insight() {
 
             <div className="bg-white rounded-xl shadow p-4">
                 <h3 className="text-lg font-semibold mb-4">Income vs Expense Over Time</h3>
-                {/* <Line data={lineChartData} /> */}
                 <div className='w-[700px] h-[600px] mx-auto'>
                     <Bar
                         data={lineChartData}
