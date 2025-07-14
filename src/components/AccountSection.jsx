@@ -86,9 +86,7 @@ export default function AccountSection() {
           {accounts.map((account) => (
             <div key={account.id} className="min-w-[360px] flex-shrink-0 relative">
               <CardAccount
-                accountType={account.accountType}
-                accountNumber={account.accountNumber}
-                balance={account.balance}
+                account={account}
               />
               <button
                 onClick={() => handleDeleteAccount(account.id)}

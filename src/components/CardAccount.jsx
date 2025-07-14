@@ -31,14 +31,14 @@ export function CardAccount({ account }) {
         }
       }}
       className={cx(
-        { "border-4 border-gray-800 dark:border-gray-50": isSelectedAccount },
+        { "border-4 border-blue-300 dark:border-gray-50": isSelectedAccount },
         `bg-gradient-to-r ${gradientColor}`,
         "relative h-[12rem] rounded-lg shadow-md dark:shadow-lg p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
       )}
     >
-      {isSelectedAccount && (
+      {/* {isSelectedAccount && (
         <Star className="absolute right-0 top-0 h-8 w-8 m-2 stroke-white" />
-      )}
+      )} */}
 
       {/* Vignette ornaments */}
       <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 dark:bg-black/10 rounded-full transform translate-x-1/2 translate-y-1/2 pointer-events-none" />
