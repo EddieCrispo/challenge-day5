@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Mail, Phone, MapPin, User, Save, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const EditProfile = () => {
   const { user, updateUser } = useAuth();
