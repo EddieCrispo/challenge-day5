@@ -47,7 +47,9 @@ export default function SummarySection({}) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Total Balance</p>
-            <p className="text-2xl font-bold text-gray-900">${totalBalance}</p>
+            <p className="text-2xl font-bold text-gray-900">
+              ${totalBalance.toFixed(2)}
+            </p>
           </div>
           <div className="bg-blue-200 p-3 rounded-lg">
             <DollarSign className="w-6 h-6 text-blue-600" />
@@ -59,7 +61,9 @@ export default function SummarySection({}) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Income</p>
-            <p className="text-2xl font-bold text-green-600">${totalIncome}</p>
+            <p className="text-2xl font-bold text-green-600">
+              ${totalIncome.toFixed(2)}
+            </p>
           </div>
           <div className="bg-green-200 p-3 rounded-lg">
             <TrendingUp className="w-6 h-6 text-green-600" />
@@ -71,7 +75,9 @@ export default function SummarySection({}) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Expenses</p>
-            <p className="text-2xl font-bold text-red-600">${totalExpense}</p>
+            <p className="text-2xl font-bold text-red-600">
+              ${totalExpense.toFixed(2)}
+            </p>
           </div>
           <div className="bg-red-200 p-3 rounded-lg">
             <ArrowDownRight className="w-6 h-6 text-red-600" />

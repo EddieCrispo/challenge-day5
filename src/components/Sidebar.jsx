@@ -37,10 +37,16 @@ const Sidebar = () => {
     { name: "Transfer", icon: <Send className="w-5 h-5" />, path: "/transfer" },
   ];
 
-  const handleLogout = () => logout();
+  const handleLogout = () => {
+    const result = confirm("Are you sure you want to logout?");
+
+    if (result) {
+      logout();
+    }
+  };
 
   return (
-    <div className="flex flex-col border-r border-slate-200 w-[300px] bg-slate-100 text-gray-900">
+    <div className="flex flex-col border-r border-slate-200 w-[300px] bg-slate-100 text-gray-900 h-screen">
       <div className="px-8 py-4 border-t border-slate-200 mb-2">
         <div className="flex items-center gap-3">
           <img
