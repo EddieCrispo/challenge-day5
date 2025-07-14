@@ -1,5 +1,13 @@
 import cx from "classnames";
-import { ArrowRightLeft, Brain, Home, LogOut, Send, UsersIcon } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Brain,
+  Home,
+  LogOut,
+  Send,
+  Tag,
+  UsersIcon,
+} from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { useAccountStore } from "../stores/accountStore";
@@ -32,6 +40,11 @@ const Sidebar = () => {
       icon: <ArrowRightLeft className="w-5 h-5" />,
       path: "/transaction",
     },
+    {
+      name: "Categorization",
+      icon: <Tag className="w-5 h-5" />,
+      path: "/categorization",
+    },
     { name: "Transfer", icon: <Send className="w-5 h-5" />, path: "/transfer" },
     { name: "Insight", icon: <Brain className="w-5 h-5" />, path: "/insight" },
   ];
@@ -54,7 +67,9 @@ const Sidebar = () => {
             className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
           />
           <div>
-            <p className="text-lg font-bold text-gray-900 dark:text-white">Hi! {user.name.split(" ")[0]}</p>
+            <p className="text-lg font-bold text-gray-900 dark:text-white">
+              Hi! {user.name.split(" ")[0]}
+            </p>
           </div>
         </div>
       </div>

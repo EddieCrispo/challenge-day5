@@ -89,6 +89,21 @@ export const useTransactionStore = create((set) => ({
     };
   },
 
+  updateTransactions: async (payload) => {
+    try {
+      await axios.put(
+        `https://6873a41cc75558e27354cd24.mockapi.io/api/v1/transactions/${payload.id}`,
+        payload
+      );
+    } catch (error) {
+      set({
+        error: "Failed to fetch transactions",
+      });
+
+      throw error || "Failed to update category";
+    }
+  },
+
   createTransaction: async (newTransaction, receiverAccount, sourceAccount) => {
     try {
       set({ loading: true, error: "" });
