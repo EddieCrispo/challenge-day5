@@ -131,13 +131,13 @@ const TransactionList = () => {
             placeholder="Search description or category..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`w-full px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
+            className={`dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:border-gray-600 w-full px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
           />
 
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className={`w-[20rem] px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
+            className={`dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:border-gray-600 w-[20rem] px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
           >
             <option value="all">All</option>
             <option value="income">Income</option>
@@ -152,10 +152,12 @@ const TransactionList = () => {
           </select>
         </div>
 
+        <hr className="border-slate-200 dark:border-gray-600 my-4" />
+
         {filteredTransactions.length === 0 ? (
           <p>No transactions found.</p>
         ) : (
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-6 dark:text-white">
             {/* LEFT COLUMN */}
             <div className="w-full md:w-1/2">
               <h2 className="text-xl font-bold mb-4">

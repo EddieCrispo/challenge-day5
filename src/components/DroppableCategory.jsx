@@ -8,8 +8,10 @@ const DroppableCategory = ({ id, categoryName, children }) => {
   return (
     <div
       ref={setNodeRef}
-      className={`p-4 border rounded-md mb-6 transition-all ${
-        isOver ? "bg-green-50 border-green-400" : "bg-slate-50 border-slate-200"
+      className={`p-4 border rounded-md mb-6 transition-all dark:text-white ${
+        isOver
+          ? "bg-green-50 border-green-400 dark:bg-green-500/19 dark:border-green-700"
+          : "bg-slate-50 dark:bg-gray-800 dark:border-gray-700 border-slate-200"
       }`}
     >
       <h3 className="text-lg font-semibold mb-2">{categoryName}</h3>

@@ -26,14 +26,14 @@ export default function TransactionCard({ transaction, showCategory = true }) {
   return (
     <li
       key={transaction.id}
-      className="border rounded-md border-slate-300 shadow-md min-h-[5rem] flex items-center justify-between p-4 px-6 bg-white"
+      className="border rounded-md border-slate-300 shadow-md min-h-[5rem] flex items-center justify-between p-4 px-6 bg-white dark:bg-gray-700 dark:border-gray-600"
     >
       <div className="flex items-center gap-3">
         <Icon className={`h-10 w-10 pb-1 ${amountColor} flex-shrink-0`} />
         <div className="flex flex-col mb-1">
-          <span className="font-semibold">{title}</span>
+          <span className="font-semibold dark:text-white">{title}</span>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             {formatDate(transaction.createdAt)}{" "}
             {transaction.categoryName && showCategory
               ? `· ${transaction.categoryName}`
@@ -43,7 +43,9 @@ export default function TransactionCard({ transaction, showCategory = true }) {
           </p>
 
           {transaction.description && (
-            <p className="text-sm text-gray-600">{transaction.description}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {transaction.description}
+            </p>
           )}
         </div>
       </div>
