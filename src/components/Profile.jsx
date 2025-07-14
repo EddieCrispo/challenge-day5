@@ -38,9 +38,9 @@ const Profile = () => {
         </button>
       </div>
 
-      {/* Profile Details */}
+      {/* Profile*/}
       <div className="max-w-2xl mx-auto grid gap-6">
-        {/* Card Component */}
+        {/* Card*/}
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-lg border border-gray-100 dark:border-gray-700 flex items-center p-5 space-x-4">
           <User className="text-blue-500 dark:text-blue-400 w-6 h-6" />
           <div>
