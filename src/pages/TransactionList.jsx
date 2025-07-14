@@ -1,9 +1,10 @@
-// components/TransactionList.jsx
+import { DndContext } from "@dnd-kit/core";
 import { useEffect, useMemo } from "react";
+import DraggableTransaction from "../components/DraggableTransactions";
+import DroppableCategory from "../components/DroppableCategory";
 import { useAuth } from "../contexts/AuthContext";
-import { useTransactionStore } from "../stores/transactionStore";
 import { useCategoryStore } from "../stores/categoryStore";
-import TransactionCardList from "../components/TransactionCardList";
+import { useTransactionStore } from "../stores/transactionStore";
 
 const TransactionList = () => {
   const {
@@ -26,7 +27,10 @@ const TransactionList = () => {
     }
   }, [user]);
 
-  // Memoized filtered & searched transactions
+  const otherCategory = useMemo(() => {
+    return categories.find((cat) => cat.name.toLowerCase() === "other");
+  }, [categories]);
+
   const filteredTransactions = useMemo(() => {
     return transactions.filter((tx) => {
       const matchesSearch =
@@ -52,43 +56,150 @@ const TransactionList = () => {
 
       return matchesSearch && matchesFilter;
     });
-  }, [transactions, searchTerm, filter, user.id]);
+  }, [transactions, searchTerm, filter, user.id, categories]);
+
+  // Pisahkan ke Other dan Bukan Other
+  const { categoryTransactions, otherTransactions } = useMemo(() => {
+    if (!otherCategory)
+      return { categoryTransactions: [], otherTransactions: [] };
+
+    const categoryTx = filteredTransactions.filter(
+      (tx) => tx.categoryId !== otherCategory.id
+    );
+    const otherTx = filteredTransactions.filter(
+      (tx) => tx.categoryId === otherCategory.id
+    );
+
+    return {
+      categoryTransactions: categoryTx,
+      otherTransactions: otherTx,
+    };
+  }, [filteredTransactions, otherCategory]);
+
+  // Kelompokkan categoryTransactions berdasarkan categoryId
+  const groupedByCategory = useMemo(() => {
+    const group = {};
+
+    // Filter out "Other" category (will be shown separately)
+    const nonOtherCategories = categories.filter(
+      (cat) => cat.id !== otherCategory?.id
+    );
+
+    nonOtherCategories.forEach((cat) => {
+      group[cat.id] = [];
+    });
+
+    categoryTransactions.forEach((tx) => {
+      if (!group[tx.categoryId]) {
+        group[tx.categoryId] = [];
+      }
+      group[tx.categoryId].push(tx);
+    });
+
+    return group;
+  }, [categoryTransactions, categories, otherCategory?.id]);
+
+  const updateTransactionCategory = (transactionId, newCategoryId) => {
+    // update store atau panggil API
+    const updatedTransactions = transactions.map((tx) =>
+      tx.id === transactionId ? { ...tx, categoryId: newCategoryId } : tx
+    );
+    useTransactionStore.setState({ transactions: updatedTransactions });
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!active || !over) return;
+
+    const transactionId = active.id;
+    const newCategoryId = over.id;
+
+    updateTransactionCategory(transactionId, newCategoryId);
+  };
+
+  if (loading) {
+    return;
+  }
 
   return (
-    <div className="p-4">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search description or category..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg transition-all focus:ring-2 focus:border-transparent focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
-        />
+    <DndContext onDragEnd={handleDragEnd}>
+      <div>
+        {/* Filter Bar */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <input
+            type="text"
+            placeholder="Search description or category..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`w-full px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
+          />
 
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="w-[20rem] px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg transition-all focus:ring-2 focus:border-transparent focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-        >
-          <option value="all">All</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-          <option value="internal">Internal</option>
-          <option value="external">External</option>
-          {categories.map((option) => (
-            <option key={option.name} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </select>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className={`w-[20rem] px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
+          >
+            <option value="all">All</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="internal">Internal</option>
+            <option value="external">External</option>
+            {categories.map((option) => (
+              <option key={option.name} value={option.id}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {filteredTransactions.length === 0 ? (
+          <p>No transactions found.</p>
+        ) : (
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* LEFT COLUMN */}
+            <div className="w-full md:w-1/2">
+              <h2 className="text-xl font-bold mb-4">
+                Transaction Log By Category
+              </h2>
+
+              {Object.entries(groupedByCategory).map(([categoryId, txs]) => {
+                const category = categories.find(
+                  (cat) => cat.id === categoryId
+                );
+
+                return (
+                  <DroppableCategory
+                    key={categoryId}
+                    id={categoryId}
+                    categoryName={category?.name}
+                  >
+                    {txs.map((tx) => (
+                      <DraggableTransaction key={tx.id} transaction={tx} />
+                    ))}
+                  </DroppableCategory>
+                );
+              })}
+            </div>
+
+            {/* RIGHT COLUMN */}
+            <div className="w-full md:w-1/2">
+              <h2 className="text-xl font-bold mb-4">
+                Uncategorized Transaction
+              </h2>
+
+              <DroppableCategory
+                id={otherCategory?.id || "other"}
+                categoryName=""
+              >
+                {otherTransactions.map((tx) => (
+                  <DraggableTransaction key={tx.id} transaction={tx} />
+                ))}
+              </DroppableCategory>
+            </div>
+          </div>
+        )}
       </div>
-
-      {filteredTransactions.length === 0 ? (
-        <p className="text-slate-600 dark:text-slate-400">No transactions found.</p>
-      ) : (
-        <TransactionCardList transactions={filteredTransactions} />
-      )}
-    </div>
+    </DndContext>
   );
 };
 
