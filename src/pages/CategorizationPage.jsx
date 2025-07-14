@@ -139,6 +139,10 @@ const CategorizationPage = () => {
     updateTransactionCategory(transactionId, newCategoryId);
   };
 
+  if (loading) {
+    return <TransactionCardList transactions={transactions} />;
+  }
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div>
@@ -167,52 +171,46 @@ const CategorizationPage = () => {
 
         <hr className="border-slate-200 dark:border-gray-600 my-4" />
 
-        {filteredTransactions.length === 0 ? (
-          <p>No transactions found.</p>
-        ) : (
-          <div className="flex flex-col md:flex-row gap-6 dark:text-white">
-            {/* LEFT COLUMN */}
-            <div className="w-full md:w-1/2">
-              <h2 className="text-xl font-bold mb-4">
-                Transaction Log By Category
-              </h2>
+        <div className="flex flex-col md:flex-row gap-6 dark:text-white">
+          {/* LEFT COLUMN */}
+          <div className="w-full md:w-1/2">
+            <h2 className="text-xl font-bold mb-4">
+              Transaction Log By Category
+            </h2>
 
-              {Object.entries(groupedByCategory).map(([categoryId, txs]) => {
-                const category = categories.find(
-                  (cat) => cat.id === categoryId
-                );
+            {Object.entries(groupedByCategory).map(([categoryId, txs]) => {
+              const category = categories.find((cat) => cat.id === categoryId);
 
-                return (
-                  <DroppableCategory
-                    key={categoryId}
-                    id={categoryId}
-                    categoryName={category?.name}
-                  >
-                    {txs.map((tx) => (
-                      <DraggableTransaction key={tx.id} transaction={tx} />
-                    ))}
-                  </DroppableCategory>
-                );
-              })}
-            </div>
-
-            {/* RIGHT COLUMN */}
-            <div className="w-full md:w-1/2">
-              <h2 className="text-xl font-bold mb-4">
-                Uncategorized Transaction
-              </h2>
-
-              <DroppableCategory
-                id={otherCategory?.id || "other"}
-                categoryName=""
-              >
-                {otherTransactions.map((tx) => (
-                  <DraggableTransaction key={tx.id} transaction={tx} />
-                ))}
-              </DroppableCategory>
-            </div>
+              return (
+                <DroppableCategory
+                  key={categoryId}
+                  id={categoryId}
+                  categoryName={category?.name}
+                >
+                  {txs.map((tx) => (
+                    <DraggableTransaction key={tx.id} transaction={tx} />
+                  ))}
+                </DroppableCategory>
+              );
+            })}
           </div>
-        )}
+
+          {/* RIGHT COLUMN */}
+          <div className="w-full md:w-1/2">
+            <h2 className="text-xl font-bold mb-4">
+              Uncategorized Transaction
+            </h2>
+
+            <DroppableCategory
+              id={otherCategory?.id || "other"}
+              categoryName=""
+            >
+              {otherTransactions.map((tx) => (
+                <DraggableTransaction key={tx.id} transaction={tx} />
+              ))}
+            </DroppableCategory>
+          </div>
+        </div>
       </div>
     </DndContext>
   );

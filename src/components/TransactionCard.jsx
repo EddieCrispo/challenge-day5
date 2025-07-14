@@ -17,7 +17,9 @@ export default function TransactionCard({ transaction, showCategory = true }) {
 
   const isIncome = transaction.receiverUserId === user.id;
   const amountSign = isIncome ? "+" : "-";
-  const amountColor = isIncome ? "text-green-500" : "text-red-500";
+  const amountColor = isIncome
+    ? "text-green-500 dark:text-green-400"
+    : "text-red-500 dark:text-red-500";
   const title = isIncome
     ? `Incoming Money from ${transaction.sourceAccount} to ${transaction.receiverAccount}`
     : `Transfer from ${transaction.sourceAccount} to ${transaction.receiverAccount}`;
