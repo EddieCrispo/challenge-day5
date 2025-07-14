@@ -157,8 +157,8 @@ const Transfer = () => {
           ...formik.values,
           userId: user.id,
           categoryName:
-            categories.find((item) => item.id === formik.values.category)
-              .name || "",
+            categories?.find((item) => item.id === formik.values.category)
+              ?.name || "",
           receiverUserId: receiverAccount.userId,
         },
         receiverAccount,
@@ -219,6 +219,8 @@ const Transfer = () => {
       fetchAccounts(user.id);
       fetchCategories();
     }
+
+    resetWizard();
   }, [user]);
 
   if (isSuccess) {

@@ -54,13 +54,15 @@ export default function TransactionCardList({ transactions }) {
               <Icon className={`h-10 w-10 pb-1 ${amountColor} flex-shrink-0`} />
               <div className="flex flex-col mb-1">
                 <span className="font-semibold">{title}</span>
-                {tx.description && (
-                  <p className="text-sm text-gray-600">{tx.description}</p>
-                )}
+
                 <p className="text-sm text-gray-600">
                   {formatDate(tx.createdAt)}{" "}
                   {tx.categoryName ? `· ${tx.categoryName}` : ""}
                 </p>
+
+                {tx.description && (
+                  <p className="text-sm text-gray-600">{tx.description}</p>
+                )}
               </div>
             </div>
 

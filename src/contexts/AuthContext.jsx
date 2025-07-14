@@ -1,13 +1,12 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { faker } from "@faker-js/faker";
 import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 
 const TOKEN_KEY = "auth_token";
 
-const getUserFromCookie = () => {
-  const token = Cookies.get(TOKEN_KEY);
+const getUserFromSessionStorage = () => {
+  const token = sessionStorage.getItem(TOKEN_KEY);
   if (!token) return null;
 
   try {
@@ -21,7 +20,7 @@ const getUserFromCookie = () => {
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(getUserFromCookie());
+  const [user, setUser] = useState(getUserFromSessionStorage());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,12 +37,11 @@ export const AuthProvider = ({ children }) => {
       );
 
       const user = res.data[0];
-
       if (!user) throw new Error("Invalid email or password");
 
       // Simulate token creation (base64)
       const token = btoa(JSON.stringify(user));
-      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+      sessionStorage.setItem(TOKEN_KEY, token);
 
       setUser(user);
       toast.success("Login successful!");
@@ -59,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    Cookies.remove(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
     setUser(null);
   };
 
@@ -89,7 +87,7 @@ export const AuthProvider = ({ children }) => {
       );
 
       const token = btoa(JSON.stringify(createdUser));
-      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+      sessionStorage.setItem(TOKEN_KEY, token);
       setUser(createdUser);
       toast.success("Registration successful!");
       return createdUser;
@@ -112,7 +110,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

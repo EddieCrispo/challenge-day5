@@ -10,10 +10,12 @@ function ProtectedLayout({ children }) {
   }
 
   return (
-    <div className="w-screen h-screen flex justify-center">
+    <div className="max-w-screen max-h-screen flex justify-center overflow-hidden">
       <Sidebar />
 
-      <div className="w-[calc(100vw-300px)] p-12">{children}</div>
+      <div className="w-[calc(100vw-300px)] p-12 max-h-screen overflow-y-auto">
+        {children}
+      </div>
     </div>
   );
 }
