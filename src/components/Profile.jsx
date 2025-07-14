@@ -1,13 +1,16 @@
 import React from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Mail, Phone, MapPin, User, Edit } from "lucide-react";
 
 const Profile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  if (!user) return <p className="p-6 text-gray-900 dark:text-white">No user data found.</p>;
+  if (!user)
+    return (
+      <p className="p-6 text-gray-900 dark:text-white">No user data found.</p>
+    );
 
   const handleEditProfile = () => {
     navigate("/edit-profile");
@@ -41,8 +44,12 @@ const Profile = () => {
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-lg border border-gray-100 dark:border-gray-700 flex items-center p-5 space-x-4">
           <User className="text-blue-500 dark:text-blue-400 w-6 h-6" />
           <div>
-            <p className="text-sm text-gray-400 dark:text-gray-500">Full Name</p>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{user.name}</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">
+              Full Name
+            </p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">
+              {user.name}
+            </p>
           </div>
         </div>
 
@@ -50,7 +57,9 @@ const Profile = () => {
           <Mail className="text-blue-500 dark:text-blue-400 w-6 h-6" />
           <div>
             <p className="text-sm text-gray-400 dark:text-gray-500">Email</p>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white break-all">{user.email}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white break-all">
+              {user.email}
+            </p>
           </div>
         </div>
 
@@ -58,7 +67,9 @@ const Profile = () => {
           <Phone className="text-blue-500 dark:text-blue-400 w-6 h-6" />
           <div>
             <p className="text-sm text-gray-400 dark:text-gray-500">Phone</p>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{user.phoneNumber}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">
+              {user.phoneNumber}
+            </p>
           </div>
         </div>
 
@@ -66,7 +77,9 @@ const Profile = () => {
           <MapPin className="text-blue-500 dark:text-blue-400 w-6 h-6" />
           <div>
             <p className="text-sm text-gray-400 dark:text-gray-500">Address</p>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{user.address}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">
+              {user.address}
+            </p>
           </div>
         </div>
       </div>

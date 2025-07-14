@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
 
       // Update the token in cookies with new user data
       const token = btoa(JSON.stringify(updatedUser));
-      Cookies.set(TOKEN_KEY, token, { expires: 7 });
+      sessionStorage.setItem(TOKEN_KEY, token);
 
       // Update local state
       setUser(updatedUser);
