@@ -36,9 +36,6 @@ export function CardAccount({ account }) {
         "relative h-[12rem] rounded-lg shadow-md dark:shadow-lg p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
       )}
     >
-      {/* {isSelectedAccount && (
-        <Star className="absolute right-0 top-0 h-8 w-8 m-2 stroke-white" />
-      )} */}
 
       {/* Vignette ornaments */}
       <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 dark:bg-black/10 rounded-full transform translate-x-1/2 translate-y-1/2 pointer-events-none" />

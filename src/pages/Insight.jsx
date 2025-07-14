@@ -88,59 +88,12 @@ function Insight() {
                     backgroundColor: 'rgba(239,68,68,0.7)', // merah
                     borderRadius: 6,
                 }
-                // {
-                //     label: 'Income',
-                //     data: income,
-                //     borderColor: 'green',
-                //     backgroundColor: 'rgba(0, 128, 0, 0.2)',
-                //     tension: 0.4
-                // },
-                // {
-                //     label: 'Expense',
-                //     data: expense,
-                //     borderColor: 'red',
-                //     backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                //     tension: 0.4
-                // }
             ]
         };
     }, [transactions]);
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {categories.map((cat) => {
-                    const amount = expenseByCategoryDetailed[cat.id];
-
-                    if (!amount) return null; // Skip jika kategori tidak punya transaksi
-
-                    return (
-                        <div key={cat.id} className="bg-white rounded-xl shadow p-4">
-                            <h3 className="text-lg font-semibold mb-4">
-                                Expense in Category: {cat.name}
-                            </h3>
-                            <Pie
-                                data={{
-                                    labels: [cat.name],
-                                    datasets: [
-                                        {
-                                            data: [amount],
-                                            backgroundColor: ['#f87171'],
-                                        },
-                                    ],
-                                }}
-                                options={{
-                                    plugins: {
-                                        legend: {
-                                            display: false,
-                                        },
-                                    },
-                                }}
-                            />
-                        </div>
-                    );
-                })}
-            </div> */}
 
             <div className="bg-white rounded-xl shadow p-4">
                 <h3 className="text-lg font-semibold mb-4">Expenses by Category</h3>
@@ -181,7 +134,7 @@ function Insight() {
                     <Bar
                         data={lineChartData}
                         options={{
-                            // indexAxis: 'y',
+                            indexAxis: 'y',
                             responsive: true,
                             plugins: {
                                 legend: {

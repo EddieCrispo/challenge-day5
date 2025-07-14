@@ -52,12 +52,6 @@ export default function AccountSection() {
   };
 
   const handleDeleteAccount = (id) => {
-    console.log('ID Delete');
-    console.log(id);
-    console.log('USER ID');
-    console.log(user?.id);
-
-
     if (confirm("Are you sure you want to delete this account?")) {
       deleteAccount(user?.id, id);
     }
