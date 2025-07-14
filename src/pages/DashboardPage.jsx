@@ -24,18 +24,22 @@ export default function DashboardPage() {
     if (accounts?.length > 0 && !selectedAccount) {
       setSelectedAccount(accounts[0]);
     }
-  }, [accounts]);
+  }, [accounts, user]);
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Accounts</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+        Accounts
+      </h1>
 
       <AccountSection />
 
       <SummarySection />
 
       <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-        <h1 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Recent Transactions</h1>
+        <h1 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+          Recent Transactions
+        </h1>
 
         <TransactionCardList transactions={transactions.slice(0, 5)} />
       </div>

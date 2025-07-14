@@ -21,6 +21,7 @@ import Insight from "./pages/Insight";
 
 // Chart
 import "../src/utils/chart";
+import CategorizationPage from "./pages/CategorizationPage";
 
 function App() {
   return (
@@ -75,7 +76,7 @@ function App() {
             />
 
             <Route
-              path="/edit-profile"
+              path="/profile-edit"
               element={
                 <ProtectedLayout>
                   <EditProfile />
@@ -106,6 +107,15 @@ function App() {
               element={
                 <ProtectedLayout>
                   <TransactionList />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/categorization"
+              element={
+                <ProtectedLayout>
+                  <CategorizationPage />
                 </ProtectedLayout>
               }
             />

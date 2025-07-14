@@ -84,7 +84,9 @@ const TransactionList = () => {
       </div>
 
       {filteredTransactions.length === 0 ? (
-        <p className="text-slate-600 dark:text-slate-400">No transactions found.</p>
+        <p className="text-slate-600 dark:text-slate-400">
+          No transactions found.
+        </p>
       ) : (
         <TransactionCardList transactions={filteredTransactions} />
       )}

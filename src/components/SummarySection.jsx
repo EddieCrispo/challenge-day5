@@ -3,11 +3,17 @@ import { useAccountStore } from "../stores/accountStore";
 import { useEffect, useMemo } from "react";
 import { useTransactionStore } from "../stores/transactionStore";
 import { useAuth } from "../contexts/AuthContext";
+import { useSelectedAccountStore } from "../stores/selectedAccountStore";
 
 export default function SummarySection({}) {
   const { user } = useAuth();
-  const { accounts, loading } = useAccountStore();
-  const { transactions, fetchTransactions } = useTransactionStore();
+  const { accounts, loading: loadingAccount } = useAccountStore();
+  const {
+    transactions,
+    fetchTransactions,
+    loading: loadingTransaction,
+  } = useTransactionStore();
+  const { selectedAccount } = useSelectedAccountStore();
 
   const totalBalance = useMemo(() => {
     return accounts.reduce((acc, curr) => acc + Number(curr.balance || 0), 0);
@@ -30,6 +36,16 @@ export default function SummarySection({}) {
       fetchTransactions(user.id);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (selectedAccount && selectedAccount.userId) {
+      fetchTransactions(selectedAccount.userId);
+    }
+  }, [selectedAccount, fetchTransactions]);
+
+  const loading = useMemo(() => {
+    return loadingAccount || loadingTransaction;
+  }, [loadingAccount, loadingTransaction]);
 
   if (loading) {
     return (

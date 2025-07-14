@@ -13,7 +13,7 @@ const Profile = () => {
     );
 
   const handleEditProfile = () => {
-    navigate("/edit-profile");
+    navigate("/profile-edit");
   };
 
   return (
