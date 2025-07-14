@@ -62,13 +62,13 @@ const TransactionList = () => {
           placeholder="Search description or category..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className={`w-full px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
+          className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg transition-all focus:ring-2 focus:border-transparent focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
         />
 
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className={`w-[20rem] px-4 py-3 border border-slate-300 rounded-lg transition-all focus:ring-2 focus:border-transparent`}
+          className="w-[20rem] px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg transition-all focus:ring-2 focus:border-transparent focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
         >
           <option value="all">All</option>
           <option value="income">Income</option>
@@ -84,7 +84,7 @@ const TransactionList = () => {
       </div>
 
       {filteredTransactions.length === 0 ? (
-        <p>No transactions found.</p>
+        <p className="text-slate-600 dark:text-slate-400">No transactions found.</p>
       ) : (
         <TransactionCardList transactions={filteredTransactions} />
       )}
