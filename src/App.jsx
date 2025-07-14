@@ -15,10 +15,11 @@ import TransactionList from "./pages/TransactionList";
 import { Bounce, ToastContainer } from "react-toastify";
 import DashboardPage from "./pages/DashboardPage";
 import Profile from "./components/Profile";
+import EditProfile from "./components/EditProfile";
 import Insight from "./pages/Insight";
 
 // Chart
-import '../src/utils/chart';
+import "../src/utils/chart";
 
 function App() {
   return (
@@ -65,6 +66,15 @@ function App() {
               element={
                 <ProtectedLayout>
                   <Profile />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/edit-profile"
+              element={
+                <ProtectedLayout>
+                  <EditProfile />
                 </ProtectedLayout>
               }
             />
