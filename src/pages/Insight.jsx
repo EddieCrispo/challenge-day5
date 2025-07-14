@@ -107,7 +107,36 @@ function Insight() {
             <div className="bg-white rounded-xl shadow p-4">
                 <h3 className="text-lg font-semibold mb-4">Expenses by Category</h3>
                 <div className='w-[600px] h-[600px] mx-auto'>
-                    <Pie
+                    {Object.values(expenseByCategoryDetailed).some(val => val > 0) ? (
+                        <Pie
+                            data={{
+                                labels: categories.map(cat => cat.name),
+                                datasets: [
+                                    {
+                                        data: categories.map(cat => expenseByCategoryDetailed[cat.id] || 0),
+                                        backgroundColor: categories.map((_, i) => {
+                                            const colors = [
+                                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                                                '#F472B6', '#60A5FA', '#FCD34D', '#10B981', '#8B5CF6',
+                                                '#E879F9', '#FDBA74', '#A78BFA', '#34D399', '#FCA5A5'
+                                            ];
+                                            return colors[i % colors.length];
+                                        })
+                                    }
+                                ]
+                            }}
+                            options={{
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                    }
+                                }
+                            }}
+                        />
+                    ) : (
+                        <p className="text-center text-gray-500">No expense data available to display.</p>
+                    )}
+                    {/* <Pie
                         data={{
                             labels: categories.map(cat => cat.name),
                             datasets: [
@@ -131,7 +160,7 @@ function Insight() {
                                 }
                             }
                         }}
-                    />
+                    /> */}
                 </div>
             </div>
 
