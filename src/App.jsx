@@ -1,5 +1,6 @@
 // Components
 import PublicLayout from "./components/PublicLayout";
+import DarkModeToggle from "./components/DarkModeToggle";
 
 // Router
 import { Navigate, Route, Routes } from "react-router";
@@ -40,6 +41,9 @@ function App() {
 
       <AuthProvider>
         <TransactionProvider>
+          <div className="fixed top-4 right-4 z-50">
+            <DarkModeToggle />
+          </div>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
 

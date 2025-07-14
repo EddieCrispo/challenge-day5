@@ -2,8 +2,9 @@ import { ArrowRight, CreditCard, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import DarkModeToggle from "../components/DarkModeToggle";
 
-const LoginPage = ({}) => {
+const LoginPage = ({ }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading, error } = useAuth();
@@ -18,20 +19,20 @@ const LoginPage = ({}) => {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md relative dark:bg-gray-800">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-4">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-2xl">
             <CreditCard className="w-8 h-8 text-white" />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-        <p className="text-gray-600">Sign in to your BankTech Pro account</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h1>
+        <p className="text-gray-600 dark:text-gray-300">Sign in to your BankTech Pro account</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Email
           </label>
           <input
@@ -40,14 +41,14 @@ const LoginPage = ({}) => {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             placeholder="Enter your email"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Password
           </label>
           <div className="relative">
@@ -57,14 +58,14 @@ const LoginPage = ({}) => {
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               placeholder="Enter your password"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
             >
               {showPassword ? (
                 <EyeOff className="w-5 h-5" />
@@ -76,8 +77,8 @@ const LoginPage = ({}) => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-600 text-sm">{error}</p>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
           </div>
         )}
 
@@ -98,10 +99,10 @@ const LoginPage = ({}) => {
       </form>
 
       <div className="mt-8 text-center">
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-300">
           Don't have an account?{" "}
           <Link to="/register">
-            <button className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
+            <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium cursor-pointer">
               Sign up
             </button>
           </Link>
