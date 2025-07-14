@@ -7,20 +7,35 @@ export const useTransactionStore = create((set) => ({
   error: "",
   filter: "",
   searchTerm: "",
+  sortBy: "createdAt", // new state for sorting
+  sortOrder: "desc", // new state for sort order (desc = newest first)
+  
   setFilter: (newFilter) => set({ filter: newFilter }),
   setSearchTerm: (newSearchTerm) => set({ searchTerm: newSearchTerm }),
+  setSortBy: (field) => set({ sortBy: field }),
+  setSortOrder: (order) => set({ sortOrder: order }),
 
-  // GET transactions
+  // GET transactions with sorting
   fetchTransactions: async (userId) => {
     set({ loading: true, error: "" });
     try {
       const response = await axios.get(
         "https://6873a41cc75558e27354cd24.mockapi.io/api/v1/transactions"
       );
+      
+      const filteredTransactions = response.data?.filter(
+        (item) => item.userId === userId || item.receiverUserId === userId
+      );
+
+      // Sort transactions by createdAt (newest first) by default
+      const sortedTransactions = filteredTransactions.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA; // desc order (newest first)
+      });
+
       set({
-        transactions: response.data?.filter(
-          (item) => item.userId === userId || item.receiverUserId === userId
-        ),
+        transactions: sortedTransactions,
         loading: false,
       });
     } catch (error) {
@@ -29,6 +44,42 @@ export const useTransactionStore = create((set) => ({
         loading: false,
       });
     }
+  },
+
+  // Computed getter for sorted transactions
+  get sortedTransactions() {
+    return (state) => {
+      const { transactions, sortBy, sortOrder } = state;
+      
+      return [...transactions].sort((a, b) => {
+        let valueA = a[sortBy];
+        let valueB = b[sortBy];
+        
+        // Handle date sorting
+        if (sortBy === "createdAt") {
+          valueA = new Date(valueA);
+          valueB = new Date(valueB);
+        }
+        
+        // Handle numeric sorting
+        if (sortBy === "amount") {
+          valueA = parseFloat(valueA) || 0;
+          valueB = parseFloat(valueB) || 0;
+        }
+        
+        // Handle string sorting
+        if (typeof valueA === "string" && typeof valueB === "string") {
+          valueA = valueA.toLowerCase();
+          valueB = valueB.toLowerCase();
+        }
+        
+        if (sortOrder === "asc") {
+          return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
+        } else {
+          return valueA < valueB ? 1 : valueA > valueB ? -1 : 0;
+        }
+      });
+    };
   },
 
   createTransaction: async (newTransaction, receiverAccount, sourceAccount) => {
@@ -80,10 +131,21 @@ export const useTransactionStore = create((set) => ({
         updatedSourceAccount
       );
 
-      set((state) => ({
-        transactions: [...(state?.transactions || []), payloadTransaction],
-        loading: false,
-      }));
+      set((state) => {
+        const updatedTransactions = [...(state?.transactions || []), payloadTransaction];
+        
+        // Sort the updated transactions by createdAt (newest first)
+        const sortedTransactions = updatedTransactions.sort((a, b) => {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+          return dateB - dateA;
+        });
+
+        return {
+          transactions: sortedTransactions,
+          loading: false,
+        };
+      });
     } catch (error) {
       set({
         error: "Failed to create transaction",
