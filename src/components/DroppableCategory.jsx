@@ -14,11 +14,12 @@ const DroppableCategory = ({ id, categoryName, children }) => {
           : "bg-slate-50 dark:bg-gray-800 dark:border-gray-700 border-slate-200"
       }`}
     >
-      <h3 className="text-lg font-semibold mb-2">{categoryName}</h3>
+      {categoryName && (
+        <h3 className="text-lg font-semibold mb-2">{categoryName}</h3>
+      )}
+
       {children.length === 0 ? (
-        <p className="text-slate-500 italic">
-          No transactions in this category.
-        </p>
+        <p className="text-slate-500 italic">No transactions found.</p>
       ) : (
         <div className="space-y-2">{children}</div>
       )}
