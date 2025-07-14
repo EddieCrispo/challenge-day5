@@ -36,11 +36,7 @@ export default function AccountSection() {
 
           {accounts.map((account) => (
             <div key={account.id} className="min-w-[360px] flex-shrink-0">
-              <CardAccount
-                accountType={account.accountType}
-                accountNumber={account.accountNumber}
-                balance={account.balance}
-              />
+              <CardAccount account={account} />
             </div>
           ))}
         </div>

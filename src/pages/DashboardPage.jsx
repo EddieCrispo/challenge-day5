@@ -6,17 +6,25 @@ import { TransactionContext } from "../contexts/TransactionContext";
 import { useAccountStore } from "../stores/accountStore";
 import TransactionCardList from "../components/TransactionCardList";
 import { useTransactionStore } from "../stores/transactionStore";
+import { useSelectedAccountStore } from "../stores/selectedAccountStore";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { transactions } = useTransactionStore();
   const { accounts, fetchAccounts } = useAccountStore();
+  const { selectedAccount, setSelectedAccount } = useSelectedAccountStore();
 
   useEffect(() => {
     if (user?.id) {
       fetchAccounts(user.id);
     }
   }, [user?.id, fetchAccounts]);
+
+  useEffect(() => {
+    if (accounts?.length > 0 && !selectedAccount) {
+      setSelectedAccount(accounts[0]);
+    }
+  }, [accounts]);
 
   return (
     <div className="space-y-4 ">
